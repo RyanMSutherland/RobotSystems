@@ -1,3 +1,9 @@
+# Applications for ROB 515
+
+This version of the Picar-X system, originally developed by SunFounder, has been modified to augment the capabilities of the system.
+
+This was done for the purposes of ROB 515 - Introduction to Robotics II at Oregon State University.
+
 # Picar-X
 
 Picar-X Python library for Raspberry Pi.
