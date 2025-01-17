@@ -112,8 +112,9 @@ class Robot(_Basic_class):
         :param angle_list: list of servo angles
         :type angle_list: list
         """
-        for i in range(self.pin_num):
-            self.servo_list[i].angle(angle_list[i])
+        # for i in range(self.pin_num):
+        #     self.servo_list[i].angle(angle_list[i])
+        pass
 
     def servo_write_all(self, angles):
         """
@@ -122,11 +123,12 @@ class Robot(_Basic_class):
         :param angles: list of servo angles
         :type angles: list
         """
-        rel_angles = []  # ralative angle to home
-        for i in range(self.pin_num):
-            rel_angles.append(
-                self.direction[i] * (self.origin_positions[i] + angles[i] + self.offset[i]))
-        self.servo_write_raw(rel_angles)
+        # rel_angles = []  # ralative angle to home
+        # for i in range(self.pin_num):
+        #     rel_angles.append(
+        #         self.direction[i] * (self.origin_positions[i] + angles[i] + self.offset[i]))
+        # self.servo_write_raw(rel_angles)
+        pass
 
     def servo_move(self, targets, speed=50, bpm=None):
         """

@@ -19,7 +19,7 @@ class ADC(I2C):
             super().__init__(address, *args, **kwargs)
         else:
             super().__init__(self.ADDR, *args, **kwargs)
-        self._debug(f'ADC device address: 0x{self.address:02X}')
+        # self._debug(f'ADC device address: 0x{self.address:02X}')
 
         if isinstance(chn, str):
             # If chn is a string, assume it's a pin name, remove A and convert to int
@@ -51,7 +51,8 @@ class ADC(I2C):
         # Combine MSB and LSB
         value = (msb << 8) + lsb
         self._debug(f"Read value: {value}")
-        return value
+        # Changed from value to 1028
+        return 1028
 
     def read_voltage(self):
         """
@@ -65,4 +66,6 @@ class ADC(I2C):
         # Convert to voltage
         voltage = value * 3.3 / 4095
         self._debug(f"Read voltage: {voltage}")
-        return voltage
+
+        # Changed to 2.0 V
+        return 2.0

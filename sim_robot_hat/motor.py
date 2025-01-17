@@ -27,7 +27,7 @@ class Motor():
         :type dir: robot_hat.pin.Pin
         """
         self.pwm = pwm
-        self.dir = dir
+        # self.dir = dir
         self.pwm.period(self.PERIOD)
         self.pwm.prescaler(self.PRESCALER)
         self.pwm.pulse_width_percent(0)
@@ -79,47 +79,51 @@ class Motors(_Basic_class):
         """
         super().__init__(*args, **kwargs)
 
-        self.db = fileDB(db=db, mode='774', owner=User)
-        self.left_id = int(self.db.get("left", default_value=0))
-        self.right_id = int(self.db.get("right", default_value=0))
-        left_reversed = bool(self.db.get(
-            "left_reverse", default_value=False))
-        right_reversed = bool(self.db.get(
-            "right_reverse", default_value=False))
+        # self.db = fileDB(db=db, mode='774', owner=User)
+        # self.left_id = int(self.db.get("left", default_value=0))
+        # self.right_id = int(self.db.get("right", default_value=0))
+        # left_reversed = bool(self.db.get(
+        #     "left_reverse", default_value=False))
+        # right_reversed = bool(self.db.get(
+        #     "right_reverse", default_value=False))
 
-        self.motors = [
-            Motor(PWM(self.MOTOR_1_PWM_PIN), Pin(self.MOTOR_1_DIR_PIN)),
-            Motor(PWM(self.MOTOR_2_PWM_PIN), Pin(self.MOTOR_2_DIR_PIN))
-        ]
-        if self.left_id != 0:
-            self.left.set_is_reverse(left_reversed)
-        if self.right_id != 0:
-            self.right.set_is_reverse(right_reversed)
+        # self.motors = [
+        #     Motor(PWM(self.MOTOR_1_PWM_PIN), Pin(self.MOTOR_1_DIR_PIN)),
+        #     Motor(PWM(self.MOTOR_2_PWM_PIN), Pin(self.MOTOR_2_DIR_PIN))
+        # ]
+        # if self.left_id != 0:
+        #     self.left.set_is_reverse(left_reversed)
+        # if self.right_id != 0:
+        #     self.right.set_is_reverse(right_reversed)
 
     def __getitem__(self, key):
         """Get specific motor"""
-        return self.motors[key-1]
+        # return self.motors[key-1]
+        pass
 
     def stop(self):
         """Stop all motors"""
-        for motor in self.motors:
-            motor.speed(0)
+        # for motor in self.motors:
+        #     motor.speed(0)
+        pass
 
     @property
     def left(self):
         """left motor"""
-        if self.left_id not in range(1, 3):
-            raise ValueError(
-                "left motor is not set yet, set it with set_left_id(1/2)")
-        return self.motors[self.left_id-1]
+        # if self.left_id not in range(1, 3):
+        #     raise ValueError(
+        #         "left motor is not set yet, set it with set_left_id(1/2)")
+        # return self.motors[self.left_id-1]
+        return 0
 
     @property
     def right(self):
         """right motor"""
-        if self.left_id not in range(1, 3):
-            raise ValueError(
-                "left motor is not set yet, set it with set_left_id(1/2)")
-        return self.motors[self.right_id-1]
+        # if self.left_id not in range(1, 3):
+        #     raise ValueError(
+        #         "left motor is not set yet, set it with set_left_id(1/2)")
+        # return self.motors[self.right_id-1]
+        return 0
 
     def set_left_id(self, id):
         """
@@ -188,8 +192,9 @@ class Motors(_Basic_class):
         :param right_speed: right motor speed(-100.0~100.0)
         :type right_speed: float
         """
-        self.left.speed(left_speed)
-        self.right.speed(right_speed)
+        # self.left.speed(left_speed)
+        # self.right.speed(right_speed)
+        pass
 
     def forward(self, speed):
         """
@@ -198,7 +203,8 @@ class Motors(_Basic_class):
         :param speed: Motor speed(-100.0~100.0)
         :type speed: float
         """
-        self.speed(speed, speed)
+        # self.speed(speed, speed)
+        pass
 
     def backward(self, speed):
         """
@@ -207,7 +213,8 @@ class Motors(_Basic_class):
         :param speed: Motor speed(-100.0~100.0)
         :type speed: float
         """
-        self.speed(-speed, -speed)
+        # self.speed(-speed, -speed)
+        pass
 
     def turn_left(self, speed):
         """
@@ -216,7 +223,8 @@ class Motors(_Basic_class):
         :param speed: Motor speed(-100.0~100.0)
         :type speed: float
         """
-        self.speed(-speed, speed)
+        # self.speed(-speed, speed)
+        pass
 
     def turn_right(self, speed):
         """
@@ -225,4 +233,5 @@ class Motors(_Basic_class):
         :param speed: Motor speed(-100.0~100.0)
         :type speed: float
         """
-        self.speed(speed, -speed)
+        # self.speed(speed, -speed)
+        pass

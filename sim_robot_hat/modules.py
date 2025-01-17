@@ -18,42 +18,44 @@ class Ultrasonic():
 
         self.timeout = timeout
 
-        trig.close()
-        echo.close()
-        self.trig = Pin(trig._pin_num)
-        self.echo = Pin(echo._pin_num, mode=Pin.IN, pull=Pin.PULL_DOWN)
+        # trig.close()
+        # echo.close()
+        # self.trig = Pin(trig._pin_num)
+        # self.echo = Pin(echo._pin_num, mode=Pin.IN, pull=Pin.PULL_DOWN)
 
     def _read(self):
-        self.trig.off()
-        time.sleep(0.001)
-        self.trig.on()
-        time.sleep(0.00001)
-        self.trig.off()
+        # self.trig.off()
+        # time.sleep(0.001)
+        # self.trig.on()
+        # time.sleep(0.00001)
+        # self.trig.off()
 
-        pulse_end = 0
-        pulse_start = 0
-        timeout_start = time.time()
+        # pulse_end = 0
+        # pulse_start = 0
+        # timeout_start = time.time()
 
-        while self.echo.gpio.value == 0:
-            pulse_start = time.time()
-            if pulse_start - timeout_start > self.timeout:
-                return -1
-        while self.echo.gpio.value == 1:
-            pulse_end = time.time()
-            if pulse_end - timeout_start > self.timeout:
-                return -1
-        if pulse_start == 0 or pulse_end == 0:
-            return -2
+        # while self.echo.gpio.value == 0:
+        #     pulse_start = time.time()
+        #     if pulse_start - timeout_start > self.timeout:
+        #         return -1
+        # while self.echo.gpio.value == 1:
+        #     pulse_end = time.time()
+        #     if pulse_end - timeout_start > self.timeout:
+        #         return -1
+        # if pulse_start == 0 or pulse_end == 0:
+        #     return -2
 
-        during = pulse_end - pulse_start
-        cm = round(during * self.SOUND_SPEED / 2 * 100, 2)
-        return cm
+        # during = pulse_end - pulse_start
+        # cm = round(during * self.SOUND_SPEED / 2 * 100, 2)
+
+        # Changed from cm to 5
+        return 5
 
     def read(self, times=10):
-        for i in range(times):
-            a = self._read()
-            if a != -1:
-                return a
+        # for i in range(times):
+        #     a = self._read()
+        #     if a != -1:
+        #         return a
         return -1
 
 class ADXL345(I2C):
@@ -97,27 +99,29 @@ class ADXL345(I2C):
             return self._read(axis)
 
     def _read(self, axis: int) -> float:
-        raw_2 = 0
-        result = super().read()
-        data = (0x08 << 8) + self._REG_POWER_CTL
-        if result:
-            self.write(data)
-        self.mem_write(0, 0x31)
-        self.mem_write(8, 0x2D)
-        raw = self.mem_read(2, self._AXISES[axis])
-        # 第一次读的值总是为0，所以多读取一次
-        self.mem_write(0, 0x31)
-        self.mem_write(8, 0x2D)
-        raw = self.mem_read(2, self._AXISES[axis])
-        if raw[1] >> 7 == 1:
+        # raw_2 = 0
+        # result = super().read()
+        # data = (0x08 << 8) + self._REG_POWER_CTL
+        # if result:
+        #     self.write(data)
+        # self.mem_write(0, 0x31)
+        # self.mem_write(8, 0x2D)
+        # raw = self.mem_read(2, self._AXISES[axis])
+        # # 第一次读的值总是为0，所以多读取一次
+        # self.mem_write(0, 0x31)
+        # self.mem_write(8, 0x2D)
+        # raw = self.mem_read(2, self._AXISES[axis])
+        # if raw[1] >> 7 == 1:
 
-            raw_1 = raw[1] ^ 128 ^ 127
-            raw_2 = (raw_1 + 1) * -1
-        else:
-            raw_2 = raw[1]
-        g = raw_2 << 8 | raw[0]
-        value = g / 256.0
-        return value
+        #     raw_1 = raw[1] ^ 128 ^ 127
+        #     raw_2 = (raw_1 + 1) * -1
+        # else:
+        #     raw_2 = raw[1]
+        # g = raw_2 << 8 | raw[0]
+        # value = g / 256.0
+
+        # Changed to 1
+        return 1
 
 
 class RGB_LED():
@@ -143,18 +147,18 @@ class RGB_LED():
         :raise ValueError: if common is not ANODE or CATHODE
         :raise TypeError: if r_pin, g_pin or b_pin is not PWM object
         """
-        if not isinstance(r_pin, PWM):
-            raise TypeError("r_pin must be robot_hat.PWM object")
-        if not isinstance(g_pin, PWM):
-            raise TypeError("g_pin must be robot_hat.PWM object")
-        if not isinstance(b_pin, PWM):
-            raise TypeError("b_pin must be robot_hat.PWM object")
-        if common not in (self.ANODE, self.CATHODE):
-            raise ValueError("common must be RGB_LED.ANODE or RGB_LED.CATHODE")
-        self.r_pin = r_pin
-        self.g_pin = g_pin
-        self.b_pin = b_pin
-        self.common = common
+        # if not isinstance(r_pin, PWM):
+        #     raise TypeError("r_pin must be robot_hat.PWM object")
+        # if not isinstance(g_pin, PWM):
+        #     raise TypeError("g_pin must be robot_hat.PWM object")
+        # if not isinstance(b_pin, PWM):
+        #     raise TypeError("b_pin must be robot_hat.PWM object")
+        # if common not in (self.ANODE, self.CATHODE):
+        #     raise ValueError("common must be RGB_LED.ANODE or RGB_LED.CATHODE")
+        # self.r_pin = r_pin
+        # self.g_pin = g_pin
+        # self.b_pin = b_pin
+        # self.common = common
 
     def color(self, color: Union[str, Tuple[int, int, int], List[int], int]):
         """
@@ -184,9 +188,9 @@ class RGB_LED():
         g = g / 255.0 * 100.0
         b = b / 255.0 * 100.0
 
-        self.r_pin.pulse_width_percent(r)
-        self.g_pin.pulse_width_percent(g)
-        self.b_pin.pulse_width_percent(b)
+        # self.r_pin.pulse_width_percent(r)
+        # self.g_pin.pulse_width_percent(g)
+        # self.b_pin.pulse_width_percent(b)
 
 
 class Buzzer():
@@ -203,21 +207,24 @@ class Buzzer():
             raise TypeError(
                 "buzzer must be robot_hat.PWM or robot_hat.Pin object")
         self.buzzer = buzzer
-        self.buzzer.off()
+        # self.buzzer.off()
 
     def on(self):
         """Turn on buzzer"""
-        if isinstance(self.buzzer, PWM):
-            self.buzzer.pulse_width_percent(50)
-        elif isinstance(self.buzzer, Pin):
-            self.buzzer.on()
+        # if isinstance(self.buzzer, PWM):
+        #     self.buzzer.pulse_width_percent(50)
+        # elif isinstance(self.buzzer, Pin):
+        #     self.buzzer.on()
+        pass
 
     def off(self):
         """Turn off buzzer"""
-        if isinstance(self.buzzer, PWM):
-            self.buzzer.pulse_width_percent(0)
-        elif isinstance(self.buzzer, Pin):
-            self.buzzer.off()
+        # if isinstance(self.buzzer, PWM):
+        #     self.buzzer.pulse_width_percent(0)
+        # elif isinstance(self.buzzer, Pin):
+        #     self.buzzer.off()
+
+        pass
 
     def freq(self, freq: float):
         """Set frequency of passive buzzer
@@ -226,9 +233,11 @@ class Buzzer():
         :type freq: int/float
         :raise TypeError: if set to active buzzer
         """
-        if isinstance(self.buzzer, Pin):
-            raise TypeError("freq is not supported for active buzzer")
-        self.buzzer.freq(freq)
+        # if isinstance(self.buzzer, Pin):
+        #     raise TypeError("freq is not supported for active buzzer")
+        # self.buzzer.freq(freq)
+
+        pass
 
     def play(self, freq: float, duration: float = None):
         """
@@ -240,14 +249,16 @@ class Buzzer():
         :type duration: float
         :raise TypeError: if set to active buzzer
         """
-        if isinstance(self.buzzer, Pin):
-            raise TypeError("play is not supported for active buzzer")
-        self.freq(freq)
-        self.on()
-        if duration is not None:
-            time.sleep(duration/2)
-            self.off()
-            time.sleep(duration/2)
+        # if isinstance(self.buzzer, Pin):
+        #     raise TypeError("play is not supported for active buzzer")
+        # self.freq(freq)
+        # self.on()
+        # if duration is not None:
+        #     time.sleep(duration/2)
+        #     self.off()
+        #     time.sleep(duration/2)
+
+        pass
 
 
 class Grayscale_Module(object):
@@ -306,11 +317,14 @@ class Grayscale_Module(object):
         :return: list of line status, 0 for white, 1 for black
         :rtype: list
         """
-        if self._reference == None:
-            raise ValueError("Reference value is not set")
-        if datas == None:
-            datas = self.read()
-        return [0 if data > self._reference[i] else 1 for i, data in enumerate(datas)]
+        # if self._reference == None:
+        #     raise ValueError("Reference value is not set")
+        # if datas == None:
+        #     datas = self.read()
+        # return [0 if data > self._reference[i] else 1 for i, data in enumerate(datas)]
+
+        # Return all 0's
+        return [0, 0, 0]
 
     def read(self, channel: int = None) -> list:
         """
@@ -321,7 +335,8 @@ class Grayscale_Module(object):
         :return: list of grayscale data
         :rtype: list
         """
-        if channel == None:
-            return [self.pins[i].read() for i in range(3)]
-        else:
-            return self.pins[channel].read()
+        # if channel == None:
+        #     return [self.pins[i].read() for i in range(3)]
+        # else:
+        #     return self.pins[channel].read()
+        return 0

@@ -12,9 +12,10 @@ def set_volume(value):
     :param value: volume(0~100)
     :type value: int
     """
-    value = min(100, max(0, value))
-    cmd = "sudo amixer -M sset 'PCM' %d%%" % value
-    os.system(cmd)
+    # value = min(100, max(0, value))
+    # cmd = "sudo amixer -M sset 'PCM' %d%%" % value
+    # os.system(cmd)
+    pass
 
 
 def command_exists(cmd):
@@ -109,13 +110,14 @@ def reset_mcu():
     transfer loop, and Raspberry Pi getting IOError while
     Reading ADC, manipulating PWM, etc.
     """
-    mcu_reset = Pin("MCURST")
-    mcu_reset.off()
-    time.sleep(0.01)
-    mcu_reset.on()
-    time.sleep(0.01)
+    # mcu_reset = Pin("MCURST")
+    # mcu_reset.off()
+    # time.sleep(0.01)
+    # mcu_reset.on()
+    # time.sleep(0.01)
 
-    mcu_reset.close()
+    # mcu_reset.close()
+    pass
 
 
 def get_battery_voltage():
@@ -125,8 +127,9 @@ def get_battery_voltage():
     :return: battery voltage(V)
     :rtype: float
     """
-    from .adc import ADC
-    adc = ADC("A4")
-    raw_voltage = adc.read_voltage()
-    voltage = raw_voltage * 3
-    return voltage
+    # from .adc import ADC
+    # adc = ADC("A4")
+    # raw_voltage = adc.read_voltage()
+    # voltage = raw_voltage * 3
+    # return voltage
+    return 4.3

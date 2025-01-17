@@ -61,9 +61,10 @@ class PWM(I2C):
         self.freq(50)
 
     def _i2c_write(self, reg, value):
-        value_h = value >> 8
-        value_l = value & 0xff
-        self.write([reg, value_h, value_l])
+        # value_h = value >> 8
+        # value_l = value & 0xff
+        # self.write([reg, value_h, value_l])
+        pass
 
     def freq(self, freq=None):
         """
@@ -74,31 +75,32 @@ class PWM(I2C):
         :return: frequency
         :rtype: float
         """
-        if freq == None:
-            return self._freq
+        # if freq == None:
+        #     return self._freq
 
-        self._freq = int(freq)
-        # [prescaler,arr] list
-        result_ap = []
-        # accuracy list
-        result_acy = []
-        # middle value for equal arr prescaler
-        st = int(math.sqrt(self.CLOCK/self._freq))
-        # get -5 value as start
-        st -= 5
-        # prevent negetive value
-        if st <= 0:
-            st = 1
-        for psc in range(st, st+10):
-            arr = int(self.CLOCK/self._freq/psc)
-            result_ap.append([psc, arr])
-            result_acy.append(abs(self._freq-self.CLOCK/psc/arr))
-        i = result_acy.index(min(result_acy))
-        psc = result_ap[i][0]
-        arr = result_ap[i][1]
-        self._debug(f"prescaler: {psc}, period: {arr}")
-        self.prescaler(psc)
-        self.period(arr)
+        # self._freq = int(freq)
+        # # [prescaler,arr] list
+        # result_ap = []
+        # # accuracy list
+        # result_acy = []
+        # # middle value for equal arr prescaler
+        # st = int(math.sqrt(self.CLOCK/self._freq))
+        # # get -5 value as start
+        # st -= 5
+        # # prevent negetive value
+        # if st <= 0:
+        #     st = 1
+        # for psc in range(st, st+10):
+        #     arr = int(self.CLOCK/self._freq/psc)
+        #     result_ap.append([psc, arr])
+        #     result_acy.append(abs(self._freq-self.CLOCK/psc/arr))
+        # i = result_acy.index(min(result_acy))
+        # psc = result_ap[i][0]
+        # arr = result_ap[i][1]
+        # self._debug(f"prescaler: {psc}, period: {arr}")
+        # self.prescaler(psc)
+        # self.period(arr)
+        pass
 
     def prescaler(self, prescaler=None):
         """
@@ -109,17 +111,18 @@ class PWM(I2C):
         :return: prescaler
         :rtype: int
         """
-        if prescaler == None:
-            return self._prescaler
+        # if prescaler == None:
+        #     return self._prescaler
 
-        self._prescaler = round(prescaler)
-        self._freq = self.CLOCK/self._prescaler/timer[self.timer]["arr"]
-        if self.timer < 4:
-            reg = self.REG_PSC + self.timer
-        else:
-            reg = self.REG_PSC2 + self.timer - 4
-        self._debug(f"Set prescaler to: {self._prescaler}")
-        self._i2c_write(reg, self._prescaler-1)
+        # self._prescaler = round(prescaler)
+        # self._freq = self.CLOCK/self._prescaler/timer[self.timer]["arr"]
+        # if self.timer < 4:
+        #     reg = self.REG_PSC + self.timer
+        # else:
+        #     reg = self.REG_PSC2 + self.timer - 4
+        # self._debug(f"Set prescaler to: {self._prescaler}")
+        # self._i2c_write(reg, self._prescaler-1)
+        pass
 
     def period(self, arr=None):
         """
@@ -130,20 +133,21 @@ class PWM(I2C):
         :return: period
         :rtype: int
         """
-        global timer
-        if arr == None:
-            return timer[self.timer]["arr"]
+        # global timer
+        # if arr == None:
+        #     return timer[self.timer]["arr"]
 
-        timer[self.timer]["arr"] = round(arr)
-        self._freq = self.CLOCK/self._prescaler/timer[self.timer]["arr"]
+        # timer[self.timer]["arr"] = round(arr)
+        # self._freq = self.CLOCK/self._prescaler/timer[self.timer]["arr"]
 
-        if self.timer < 4:
-            reg = self.REG_ARR + self.timer
-        else:
-            reg = self.REG_ARR2 + self.timer - 4
+        # if self.timer < 4:
+        #     reg = self.REG_ARR + self.timer
+        # else:
+        #     reg = self.REG_ARR2 + self.timer - 4
 
-        self._debug(f"Set arr to: {timer[self.timer]['arr']}")
-        self._i2c_write(reg, timer[self.timer]["arr"])
+        # self._debug(f"Set arr to: {timer[self.timer]['arr']}")
+        # self._i2c_write(reg, timer[self.timer]["arr"])
+        pass
 
     def pulse_width(self, pulse_width=None):
         """
@@ -154,12 +158,13 @@ class PWM(I2C):
         :return: pulse width
         :rtype: float
         """
-        if pulse_width == None:
-            return self._pulse_width
+        # if pulse_width == None:
+        #     return self._pulse_width
 
-        self._pulse_width = int(pulse_width)
-        reg = self.REG_CHN + self.channel
-        self._i2c_write(reg, self._pulse_width)
+        # self._pulse_width = int(pulse_width)
+        # reg = self.REG_CHN + self.channel
+        # self._i2c_write(reg, self._pulse_width)
+        pass
 
     def pulse_width_percent(self, pulse_width_percent=None):
         """
@@ -170,15 +175,16 @@ class PWM(I2C):
         :return: pulse width percentage
         :rtype: float
         """
-        global timer
-        if pulse_width_percent == None:
-            return self._pulse_width_percent
+        # global timer
+        # if pulse_width_percent == None:
+        #     return self._pulse_width_percent
 
-        self._pulse_width_percent = pulse_width_percent
-        temp = self._pulse_width_percent / 100.0
-        # print(temp)
-        pulse_width = temp * timer[self.timer]["arr"]
-        self.pulse_width(pulse_width)
+        # self._pulse_width_percent = pulse_width_percent
+        # temp = self._pulse_width_percent / 100.0
+        # # print(temp)
+        # pulse_width = temp * timer[self.timer]["arr"]
+        # self.pulse_width(pulse_width)
+        pass
 
 
 def test():
