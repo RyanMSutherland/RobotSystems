@@ -9,7 +9,6 @@ def straight_line(px, speed = 70, angle = 0, wait = 3.0):
     px.stop()
     time.sleep(wait)
 
-    px.set_dir_servo_angle(-angle)
     px.backward(speed)
     time.sleep(wait)
 
@@ -17,4 +16,4 @@ def straight_line(px, speed = 70, angle = 0, wait = 3.0):
 
 if __name__ == "__main__":
     px = Picarx()
-    straight_line(px)
+    straight_line(px, 90, 20, 2.0)
