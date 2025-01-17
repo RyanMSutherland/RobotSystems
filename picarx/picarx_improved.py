@@ -210,6 +210,8 @@ class Picarx(object):
         left_motor, right_motor = self.ackerman_steering(False, speed, current_angle)
         self.set_motor_speed(1, left_motor)
         self.set_motor_speed(2, right_motor)  
+        logging.debug(f'Left Motor Set: {left_motor}, Right Motor Set: {right_motor}, Current Angle: {current_angle}, Backward')               
+
 
     def forward(self, speed):
         current_angle = self.dir_current_angle
@@ -222,13 +224,13 @@ class Picarx(object):
         current_angle = np.deg2rad(current_angle)
         left_motor, right_motor = self.ackerman_steering(True, speed, current_angle)
         self.set_motor_speed(1, left_motor)
-        self.set_motor_speed(2, right_motor)                
+        self.set_motor_speed(2, right_motor) 
+        logging.debug(f'Left Motor Set: {left_motor}, Right Motor Set: {right_motor}, Current Angle: {current_angle}, Forward')               
 
     def stop(self):
         '''
         Execute twice to make sure it stops
         '''
-        print("HOLD TF UP")
         for _ in range(2):
             self.motor_speed_pins[0].pulse_width_percent(0)
             self.motor_speed_pins[1].pulse_width_percent(0)
