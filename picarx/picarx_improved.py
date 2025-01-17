@@ -226,13 +226,16 @@ class Picarx(object):
             # else:
             #     self.set_motor_speed(1, speed)
             #     self.set_motor_speed(2, -1*speed * power_scale)
+            print(f"Current Angle: {current_angle}")
             current_angle = np.rad2deg(current_angle)
             if (current_angle/abs_current_angle) > 0:
                 self.set_motor_speed(1, speed*(1+np.sin(current_angle)))
                 self.set_motor_speed(2, -speed*(1-np.sin(current_angle)))
+                print(f'Left: {speed*(1+np.sin(current_angle))}, Right: {-speed*(1-np.sin(current_angle))}')
             else:
                 self.set_motor_speed(1, speed*(1+np.sin(current_angle)))
                 self.set_motor_speed(2, -speed*(1-np.sin(current_angle)))
+                print(f'Left: {speed*(1+np.sin(current_angle))}, Right: {-speed*(1-np.sin(current_angle))}')
         else:
             self.set_motor_speed(1, speed)
             self.set_motor_speed(2, -1*speed)                  
