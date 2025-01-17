@@ -190,56 +190,39 @@ class Picarx(object):
         self.set_motor_speed(1, speed)
         self.set_motor_speed(2, speed)
 
+    def ackerman_steering(self, forward, speed, current_angle):
+        left_base = speed*(1+np.sin(current_angle))
+        right_base = -speed*(1-np.sin(current_angle))
+        if forward:
+            return left_base, right_base 
+
+        return -left_base, -right_base
+
     def backward(self, speed):
         current_angle = self.dir_current_angle
-        if current_angle != 0:
-            abs_current_angle = abs(current_angle)
-            if abs_current_angle > self.DIR_MAX:
-                abs_current_angle = self.DIR_MAX
-            power_scale = (100 - abs_current_angle) / 100.0 
-            # if (current_angle / abs_current_angle) > 0:
-            #     self.set_motor_speed(1, -1*speed)
-            #     self.set_motor_speed(2, speed * power_scale)
-            # else:
-            #     self.set_motor_speed(1, -1*speed * power_scale)
-            #     self.set_motor_speed(2, speed )
-            current_angle = np.deg2rad(current_angle)
-            if (current_angle/abs_current_angle) > 0:
-                self.set_motor_speed(1, -speed*(1+np.sin(current_angle)))
-                self.set_motor_speed(2, speed*(1-np.sin(current_angle)))
-            else:
-                self.set_motor_speed(1, -speed*(1+np.sin(current_angle)))
-                self.set_motor_speed(2, speed*(1-np.sin(current_angle)))
-        else:
-            self.set_motor_speed(1, -1*speed)
-            self.set_motor_speed(2, speed)  
+        # if (current_angle / abs_current_angle) > 0:
+        #     self.set_motor_speed(1, -1*speed)
+        #     self.set_motor_speed(2, speed * power_scale)
+        # else:
+        #     self.set_motor_speed(1, -1*speed * power_scale)
+        #     self.set_motor_speed(2, speed )
+        current_angle = np.deg2rad(current_angle)
+        left_motor, right_motor = self.ackerman_steering(self, False, speed, current_angle)
+        self.set_motor_speed(1, left_motor)
+        self.set_motor_speed(2, right_motor)  
 
     def forward(self, speed):
         current_angle = self.dir_current_angle
-        if current_angle != 0:
-            abs_current_angle = abs(current_angle)
-            if abs_current_angle > self.DIR_MAX:
-                abs_current_angle = self.DIR_MAX
-            power_scale = (100 - abs_current_angle) / 100.0
-            # if (current_angle / abs_current_angle) > 0:
-            #     self.set_motor_speed(1, 1*speed * power_scale)
-            #     self.set_motor_speed(2, -speed) 
-            # else:
-            #     self.set_motor_speed(1, speed)
-            #     self.set_motor_speed(2, -1*speed * power_scale)
-            print(f"Current Angle: {current_angle}, Converted:{np.deg2rad(current_angle)}")
-            current_angle = np.deg2rad(current_angle)
-            if (current_angle/abs_current_angle) > 0:
-                self.set_motor_speed(1, speed*(1+np.sin(current_angle)))
-                self.set_motor_speed(2, -speed*(1-np.sin(current_angle)))
-                print(f'Left: {speed*(1+np.sin(current_angle))}, Right: {-speed*(1-np.sin(current_angle))}')
-            else:
-                self.set_motor_speed(1, speed*(1+np.sin(current_angle)))
-                self.set_motor_speed(2, -speed*(1-np.sin(current_angle)))
-                print(f'Left: {speed*(1+np.sin(current_angle))}, Right: {-speed*(1-np.sin(current_angle))}')
-        else:
-            self.set_motor_speed(1, speed)
-            self.set_motor_speed(2, -1*speed)                  
+        # if (current_angle / abs_current_angle) > 0:
+        #     self.set_motor_speed(1, 1*speed * power_scale)
+        #     self.set_motor_speed(2, -speed) 
+        # else:
+        #     self.set_motor_speed(1, speed)
+        #     self.set_motor_speed(2, -1*speed * power_scale)
+        current_angle = np.deg2rad(current_angle)
+        left_motor, right_motor = self.ackerman_steering(self, True, speed, current_angle)
+        self.set_motor_speed(1, left_motor)
+        self.set_motor_speed(2, right_motor)                
 
     def stop(self):
         '''
