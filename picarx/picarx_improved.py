@@ -207,7 +207,7 @@ class Picarx(object):
         #     self.set_motor_speed(1, -1*speed * power_scale)
         #     self.set_motor_speed(2, speed )
         current_angle = np.deg2rad(current_angle)
-        left_motor, right_motor = self.ackerman_steering(self, False, speed, current_angle)
+        left_motor, right_motor = self.ackerman_steering(False, speed, current_angle)
         self.set_motor_speed(1, left_motor)
         self.set_motor_speed(2, right_motor)  
 
@@ -220,7 +220,7 @@ class Picarx(object):
         #     self.set_motor_speed(1, speed)
         #     self.set_motor_speed(2, -1*speed * power_scale)
         current_angle = np.deg2rad(current_angle)
-        left_motor, right_motor = self.ackerman_steering(self, True, speed, current_angle)
+        left_motor, right_motor = self.ackerman_steering(True, speed, current_angle)
         self.set_motor_speed(1, left_motor)
         self.set_motor_speed(2, right_motor)                
 
