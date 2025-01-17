@@ -7,7 +7,7 @@ def straight_line(px, speed = 70, angle = 0, wait = 3.0):
     time.sleep(wait)
 
     px.stop()
-    time.slep(wait)
+    time.sleep(wait)
 
     px.set_dir_servo_angle(-angle)
     px.backward(speed)
