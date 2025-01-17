@@ -1,9 +1,8 @@
 import sys
 
-sys.path.append("C:/Users/RyanS/Box/Classes/ROB 515/RobotSystems/picarx")
+sys.path.append("./picarx")
 from picarx_improved import Picarx
 import time
-
 
 if __name__ == "__main__":
     try:
