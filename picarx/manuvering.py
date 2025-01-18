@@ -38,7 +38,7 @@ def k_turn(px, speed = 70, wait = 1.5, left = False):
     if left: 
         turn_in_value *= -1
 
-    px.setdir_servo_angle(turn_in_value)
+    px.set_dir_servo_angle(turn_in_value)
     px.forward(speed)
     time.sleep(wait)
 
@@ -57,7 +57,10 @@ if __name__ == "__main__":
     
     user_value = 0
     while user_value != 4:
-        input("Please choose from the following options. 1 : Drive Forwawrd/Backwards. 2 : Parallel Parking. 3 : K-Turn. 4 : Quit")
-        # straight_line(px)
-        parallel_parking(px, False)
-        # k_turn(px, False)
+        user_value = int(input("Please choose from the following options. 1 : Drive Forwawrd/Backwards. 2 : Parallel Parking. 3 : K-Turn. 4 : Quit \n"))
+        if user_value == 1:
+            straight_line(px)
+        elif user_value == 2:
+            parallel_parking(px, False)
+        elif user_value == 3:
+            k_turn(px, False)
