@@ -12,6 +12,8 @@ def straight_line(px, speed = 70, angle = 0, wait = 3.0):
     px.backward(speed)
     time.sleep(wait)
 
+    px.stop()
+
 def parallel_parking(px, speed = 70, wait = 1.5, left = False):
     turn_in_value = 15
     if left:
