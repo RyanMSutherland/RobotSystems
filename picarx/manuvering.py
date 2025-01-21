@@ -46,6 +46,10 @@ def k_turn(px, speed = 70, wait = 1.5, left = False):
     px.backward(speed)
     time.sleep(wait)
 
+    px.set_dir_servo_angle(turn_in_value)
+    px.forward(speed)
+    time.sleep(wait)
+
     px.set_dir_servo_angle(0)
     px.forward(speed)
     time.sleep(wait)
