@@ -65,6 +65,6 @@ if __name__ == "__main__":
         if user_value == 1:
             straight_line(px)
         elif user_value == 2:
-            parallel_parking(px, False)
+            parallel_parking(px, left = False)
         elif user_value == 3:
-            k_turn(px, False)
+            k_turn(px, left = False)
