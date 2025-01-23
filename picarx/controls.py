@@ -61,8 +61,8 @@ class Control():
         pass
 
 if __name__ == "__main__":
+    sense = Sense()
+    think = Interpret()
     while True:
-        sense = Sense()
-        think = Interpret()
         think.line_location(sense.get_grayscale())
         think.robot_position()
