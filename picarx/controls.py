@@ -77,8 +77,9 @@ class Control():
 
 if __name__ == "__main__":
     sense = Sense()
-    think = Interpret(polarity = True)
+    think = Interpret(polarity = False)
     control = Control()
+    sense.px.forward(40)
     while True:
         think.line_location(sense.get_grayscale())
         robot_position = think.robot_position()
