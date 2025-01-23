@@ -79,7 +79,8 @@ if __name__ == "__main__":
     sense = Sense()
     think = Interpret(polarity = False)
     control = Control()
-    sense.px.forward(40)
+    time.sleep(5)
+    sense.px.forward(20)
     while True:
         think.line_location(sense.get_grayscale())
         robot_position = think.robot_position()
