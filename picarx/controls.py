@@ -72,5 +72,5 @@ if __name__ == "__main__":
     control = Control()
     while True:
         think.line_location(sense.get_grayscale())
-        think.robot_position()
-        control.steer(sense.px)
+        robot_position = think.robot_position()
+        control.steer(sense.px, robot_position)
