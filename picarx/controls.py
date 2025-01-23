@@ -61,7 +61,7 @@ class Control():
         pass
 
 if __name__ == "__main__":
-    while True:
+    # while True:
         sense = Sense()
         think = Interpret()
         think.line_location(sense.get_grayscale())
