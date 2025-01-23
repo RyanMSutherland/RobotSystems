@@ -9,10 +9,10 @@ logging.getLogger().setLevel(logging.DEBUG)
 class Sense():
     def __init__(self):
         self.px = Picarx()
-        print(self.px.grayscale.reference)
+        self.reference = self.px.grayscale.reference
     
     def get_grayscale(self):
-        return self.px.grayscale.read()
+        return self.px.grayscale.read() - self.reference
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
