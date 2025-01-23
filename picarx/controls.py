@@ -7,7 +7,7 @@ logging.basicConfig(format=logging_format, level = logging.INFO, datefmt="%H:%M:
 logging.getLogger().setLevel(logging.DEBUG)
 
 class Sense():
-    def __init__(self, car):
+    def __init__(self):
         self.px = Picarx()
     
     def get_grayscale(self):
