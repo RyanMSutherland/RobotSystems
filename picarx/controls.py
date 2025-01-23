@@ -34,25 +34,29 @@ class Interpret():
 
         left, middle, right = grayscale_values
         logging.debug(f'MODIFIED - Left: {left}, Middle: {middle}, Right: {right}')
-        if left > right:
-            self.robot_location = (middle - left)/max(left, middle)
-            if self.robot_location < 0:
-                self.robot_location = abs(self.robot_location)
+
+        try:
+            if left > right:
+                self.robot_location = (middle - left)/max(left, middle)
+                if self.robot_location < 0:
+                    self.robot_location = abs(self.robot_location)
+                    return
+                self.robot_location = 1-self.robot_location
                 return
-            self.robot_location = 1-self.robot_location
+            self.robot_location = (middle-right)/max(middle, right)
+            if self.robot_location < 0:
+                return
+            self.robot_location -= 1
             return
-        self.robot_location = (middle-right)/max(middle, right)
-        if self.robot_location < 0:
-            return
-        self.robot_location -= 1
-        return
+        except:
+            logging.debug(f'Divide by zero error, continuing')
 
     def robot_position(self):
         logging.debug(f'Robot Location: {self.robot_location}')
         return self.robot_location
 
 class Control():
-    def __init__(self, k_p = 1.0, k_i = 1.0, threshold = 0.15):
+    def __init__(self, k_p = 1.0, k_i = 0.0, threshold = 0.15):
         self.k_p = k_p
         self.k_i = k_i
         self.threshold = threshold
