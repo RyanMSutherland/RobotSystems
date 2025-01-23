@@ -27,13 +27,14 @@ class Interpret():
         self.robot_location = 0
     
     def line_location(self, grayscale_values):
+        logging.debug(f'Raw Grayscale Values: {grayscale_values}')
         if self.polarity:
             grayscale_values = [grayscale_value - max(grayscale_values) for grayscale_value in grayscale_values] 
         else:
             grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
 
         left, middle, right = grayscale_values
-        logging.debug(f'Left: {left}, Middle: {middle}, Right: {right}')
+        logging.debug(f'MODIFIED - Left: {left}, Middle: {middle}, Right: {right}')
         if left > right:
             self.robot_location = (middle - left)/max(left, middle)
             if self.robot_location < 0:
