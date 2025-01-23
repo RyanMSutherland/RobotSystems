@@ -52,7 +52,7 @@ class Interpret():
         return self.robot_location
 
 class Control():
-    def __init__(self, car, k_p = 1.0, k_i = 1.0, threshold = 0.15):
+    def __init__(self, k_p = 1.0, k_i = 1.0, threshold = 0.15):
         self.k_p = k_p
         self.k_i = k_i
         self.threshold = threshold
