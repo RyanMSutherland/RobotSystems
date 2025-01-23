@@ -2,7 +2,7 @@ from picarx_improved import Picarx
 import time
 import logging
 
-logging_format = "%(asctime)s: %(messages)s"
+logging_format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=logging_format, level = logging.INFO, datefmt="%H:%M:%S")
 logging.getLogger().setLevel(logging.DEBUG)
 
@@ -33,7 +33,7 @@ class Interpret():
             grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
 
         left, middle, right = grayscale_values
-        logging.debug("Left: ", left ," Middle: ", {middle}, " Right: ", right)
+        logging.debug(f'Left: {left}, Middle: {middle}, Right: {right}')
         if left > right:
             self.robot_location = (middle - left)/max(left, middle)
             if self.robot_location < 0:
@@ -48,7 +48,7 @@ class Interpret():
         return
 
     def robot_position(self):
-        logging.debug("Predicted Location: ", self.robot_location)
+        logging.debug(f'Robot Location: {self.robot_location}')
         return self.robot_location
 
 class Control():
@@ -61,10 +61,8 @@ class Control():
         pass
 
 if __name__ == "__main__":
-    # while True:
+    while True:
         sense = Sense()
         think = Interpret()
         think.line_location(sense.get_grayscale())
         think.robot_position()
-
-
