@@ -77,7 +77,7 @@ class Control():
 
 if __name__ == "__main__":
     sense = Sense()
-    think = Interpret()
+    think = Interpret(polarity = True)
     control = Control()
     while True:
         think.line_location(sense.get_grayscale())
