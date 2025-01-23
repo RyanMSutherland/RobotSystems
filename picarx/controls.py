@@ -33,7 +33,7 @@ class Interpret():
             grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
 
         left, middle, right = grayscale_values
-        logging.debug(f'Left: {left}, Middle: {middle}, Right: {right}')
+        logging.debug("Left: ", left ," Middle: ", {middle}, " Right: ", right)
         if left > right:
             self.robot_location = (middle - left)/max(left, middle)
             if self.robot_location < 0:
@@ -48,7 +48,7 @@ class Interpret():
         return
 
     def robot_position(self):
-        logging.debug(f'Predicted Location: {self.robot_location}')
+        logging.debug("Predicted Location: ", self.robot_location)
         return self.robot_location
 
 class Control():
