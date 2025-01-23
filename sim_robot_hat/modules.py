@@ -335,8 +335,7 @@ class Grayscale_Module(object):
         :return: list of grayscale data
         :rtype: list
         """
-        # if channel == None:
-        #     return [self.pins[i].read() for i in range(3)]
-        # else:
-        #     return self.pins[channel].read()
-        return 0
+        if channel == None:
+            return [2, 4, 6]
+        else:
+            return [0]
