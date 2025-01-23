@@ -60,7 +60,7 @@ class Control():
         self.angle = 0.0
     
     def steer(self, px, car_position):
-        if abs(car_position) < self.threshold:
+        if abs(car_position) > self.threshold:
             self.error += car_position
             self.angle = self.k_p * car_position + self.error * self.k_i
             logging.debug(f'Steering Angle: {self.angle}')

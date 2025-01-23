@@ -47,7 +47,7 @@ def parallel_parking(px, speed = 70, wait = 1.5, left = False):
     px.forward(speed/2)
     time.sleep(wait*1.5)
 
-    logging.debig("Stopping")
+    logging.debug("Stopping")
     px.stop()
 
 def k_turn(px, speed = 70, wait = 1.5, left = False):
