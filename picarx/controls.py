@@ -56,7 +56,7 @@ class Interpret():
         return self.robot_location
 
 class Control():
-    def __init__(self, k_p = 1.0, k_i = 0.0, threshold = 0.15):
+    def __init__(self, k_p = 10.0, k_i = 0.0, threshold = 0.15):
         self.k_p = k_p
         self.k_i = k_i
         self.threshold = threshold
@@ -64,11 +64,16 @@ class Control():
         self.angle = 0.0
     
     def steer(self, px, car_position):
-        if abs(car_position) < self.threshold:
+        if abs(car_position) > self.threshold:
             self.error += car_position
             self.angle = self.k_p * car_position + self.error * self.k_i
             logging.debug(f'Steering Angle: {self.angle}')
-            # px.set_dir_servo_angle(self.angle)
+            px.set_dir_servo_angle(self.angle)
+            return self.angle
+        self.angle = 0
+        logging.debug(f'Steering Angle: {self.angle}')
+        px.set_dir_servo_angle(self.angle)
+        return self.angle
 
 if __name__ == "__main__":
     sense = Sense()
