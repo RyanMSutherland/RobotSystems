@@ -29,9 +29,9 @@ class Interpret():
     def line_location(self, grayscale_values):
         logging.debug(f'Raw Grayscale Values: {grayscale_values}')
         if self.polarity:
-            grayscale_values = [grayscale_value - max(grayscale_values) for grayscale_value in grayscale_values] 
-        else:
             grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
+        else:
+            grayscale_values = [abs(grayscale_value - max(grayscale_values)) for grayscale_value in grayscale_values] 
 
         left, middle, right = grayscale_values
         logging.debug(f'MODIFIED - Left: {left}, Middle: {middle}, Right: {right}')
@@ -63,7 +63,7 @@ class Control():
 
 if __name__ == "__main__":
     sense = Sense()
-    think = Interpret()
+    think = Interpret(polarity = True)
     while True:
         think.line_location(sense.get_grayscale())
         think.robot_position()
