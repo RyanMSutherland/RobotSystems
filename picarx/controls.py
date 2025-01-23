@@ -7,7 +7,7 @@ logging.basicConfig(format=logging_format, level = logging.INFO, datefmt="%H:%M:
 logging.getLogger().setLevel(logging.DEBUG)
 
 class Sense():
-    def __init__(self):
+    def __init__(self, car):
         self.px = Picarx()
     
     def get_grayscale(self):
@@ -27,7 +27,6 @@ class Interpret():
         self.robot_location = 0
     
     def line_location(self, grayscale_values):
-        logging.debug(f'Raw Grayscale Values: {grayscale_values}')
         if self.polarity:
             grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
         else:
@@ -53,17 +52,25 @@ class Interpret():
         return self.robot_location
 
 class Control():
-    def __init__(self, k_p = 1.0, k_i = 1.0, threshold = 0.05):
+    def __init__(self, car, k_p = 1.0, k_i = 1.0, threshold = 0.15):
         self.k_p = k_p
         self.k_i = k_i
         self.threshold = threshold
+        self.error = 0.0
+        self.angle = 0.0
     
-    def steer(self):
-        pass
+    def steer(self, px, car_position):
+        if abs(car_position) < self.threshold:
+            self.error += car_position
+            self.angle = self.k_p * car_position + self.error * self.k_i
+            logging.debug(f'Steering Angle: {self.angle}')
+            # px.set_dir_servo_angle(self.angle)
 
 if __name__ == "__main__":
     sense = Sense()
-    think = Interpret(polarity = True)
+    think = Interpret()
+    control = Control()
     while True:
         think.line_location(sense.get_grayscale())
         think.robot_position()
+        control.steer(sense.px)
