@@ -43,7 +43,8 @@ class Interpret():
         self.robot_location = 0
         self.thresh = 75
         self.colour = 255
-        self.img_cutoff = 400
+        self.img_start = 350
+        self.img_cutoff = 425
     
     def line_location_grayscale(self, grayscale_values):
         if self.polarity:
@@ -74,8 +75,9 @@ class Interpret():
     def line_location_camera(self, path, image_name):
         gray_img = cv2.imread(f'{path}/{image_name}.jpg')
         gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
-        gray_img = gray_img[self.img_cutoff:, :]
+        gray_img = gray_img[self.img_start:self.img_cutoff, :]
         _, img_width = gray_img.shape
+        img_width /= 2
         if self.polarity:
             _, mask = cv2.threshold(gray_img, thresh = self.thresh, maxval=self.colour, type = cv2.THRESH_BINARY_INV)
         else:
@@ -86,12 +88,13 @@ class Interpret():
             largest_contour = max(contours, key=cv2.contourArea)
             M = cv2.moments(largest_contour)
         except:
+            logging.debug("NO CONTOUR FOUND")
             return 
 
         if M['m00'] != 0:
             # cx = int(M['m10']/M['m00'])
             # cy = int(M['m01']/M['m00'])
-            self.robot_location = (int(M['m10']/M['m00']) - img_width/2)/img_width
+            self.robot_location = (int(M['m10']/M['m00']) - img_width)/img_width
             # cv2.circle(gray_img, (cx, cy), 5, (0, 0, 255), -1)
         # cv2.imshow("Gray", gray_img)
         # cv2.waitKey(0)
@@ -102,7 +105,7 @@ class Interpret():
         return self.robot_location
 
 class Control():
-    def __init__(self, k_p = 30.0, k_i = 0.0, threshold = 0.15):
+    def __init__(self, k_p = 35.0, k_i = 0.0, threshold = 0.15):
         self.k_p = k_p
         self.k_i = k_i
         self.threshold = threshold
@@ -124,9 +127,9 @@ class Control():
 if __name__ == "__main__":
     sense = Sense(camera=True)
     think = Interpret(polarity = False)
-    control = Control()
+    control = Control(threshold = 0.05)
     time.sleep(2)
-    # sense.px.forward(20)
+    sense.px.forward(30)
     while True:
         # think.line_location_grayscale(sense.get_grayscale())
         sense.take_photo()
