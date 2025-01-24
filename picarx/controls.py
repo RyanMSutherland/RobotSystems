@@ -41,6 +41,9 @@ class Interpret():
         self.low_range, self.high_range = range
         self.polarity = polarity
         self.robot_location = 0
+        self.thresh = 75
+        self.colour = 255
+        self.img_cutoff = 400
     
     def line_location_grayscale(self, grayscale_values):
         if self.polarity:
@@ -71,13 +74,21 @@ class Interpret():
     def line_location_camera(self, path, image_name):
         gray_img = cv2.imread(f'{path}/{image_name}.jpg')
         gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
-
+        gray_img = gray_img[self.img_cutoff:, :]
         if self.polarity:
-            _, mask = cv2.threshold(gray_img, thresh = 180, maxval=255, type = cv2.THRESH_BINARY_INV)
+            _, mask = cv2.threshold(gray_img, thresh = self.thresh, maxval=self.colour, type = cv2.THRESH_BINARY_INV)
         else:
-            _, mask = cv2.threshold(gray_img, thresh = 180, maxval=255, type = cv2.THRESH_BINARY_INV)
+            _, mask = cv2.threshold(gray_img, thresh = self.thresh, maxval=self.colour, type = cv2.THRESH_BINARY_INV)
         
-        cv2.imshow("Gray", mask)
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        largest_contour = max(contours, key=cv2.contourArea)
+        M = cv2.moments(largest_contour)
+
+        if M['m00'] != 0:
+            cx = int(M['m10']/M['m00'])
+            cy = int(M['m01']/M['m00'])
+            cv2.circle(gray_img, (cx, cy), 5, (0, 0, 255), -1)
+        cv2.imshow("Gray", gray_img)
         cv2.waitKey(0)
         #cv2.destroyAllWindows()
 
