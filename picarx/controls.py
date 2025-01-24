@@ -1,6 +1,7 @@
 from picarx_improved import Picarx
 import time
 import logging
+import numpy as np
 
 logging_format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=logging_format, level = logging.INFO, datefmt="%H:%M:%S")
@@ -9,10 +10,10 @@ logging.getLogger().setLevel(logging.DEBUG)
 class Sense():
     def __init__(self):
         self.px = Picarx()
-        self.reference = self.px.grayscale.reference
+        self.reference = np.array(self.px.grayscale._reference)
     
     def get_grayscale(self):
-        return self.px.grayscale.read() - self.reference
+        return np.array(self.px.grayscale.read()) - self.reference
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
@@ -57,7 +58,7 @@ class Interpret():
         return self.robot_location
 
 class Control():
-    def __init__(self, k_p = 10.0, k_i = 0.0, threshold = 0.15):
+    def __init__(self, k_p = 30.0, k_i = 0.0, threshold = 0.15):
         self.k_p = k_p
         self.k_i = k_i
         self.threshold = threshold
@@ -69,7 +70,7 @@ class Control():
             self.error += car_position
             self.angle = self.k_p * car_position + self.error * self.k_i
             logging.debug(f'Steering Angle: {self.angle}')
-            px.set_dir_servo_angle(self.angle)
+            px.set_dir_servo_angle(-self.angle)
             return self.angle
         self.angle = 0
         logging.debug(f'Steering Angle: {self.angle}')
