@@ -3,6 +3,7 @@ from vilib import Vilib
 import time
 import logging
 import numpy as np
+import cv2
 
 logging_format = "%(asctime)s: %(message)s"
 logging.basicConfig(format=logging_format, level = logging.INFO, datefmt="%H:%M:%S")
@@ -21,7 +22,7 @@ class Sense():
         return np.array(self.px.grayscale.read()) - self.reference
     
     def take_photo(self):
-        logging.debug("Photo Taken)")
+        logging.debug("Photo Taken")
         Vilib.take_photo(photo_name = self.image_name, path = self.path)
 
 class Interpret():
@@ -63,6 +64,11 @@ class Interpret():
         except:
             logging.debug(f'Divide by zero error, continuing')
 
+    def line_location_camera(self, path, image_name):
+        gray_img = cv2.imread(f'{path}/{image_name}.jpg')
+        gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
+        print(gray_img)
+
     def robot_position(self):
         logging.debug(f'Robot Location: {self.robot_location}')
         return self.robot_location
@@ -91,8 +97,9 @@ if __name__ == "__main__":
     sense = Sense(camera=True)
     think = Interpret(polarity = False)
     control = Control()
-    time.sleep(5)
+    time.sleep(2)
     sense.take_photo()
+    think.line_location_camera(sense.path, sense.image_name)
     # sense.px.forward(20)
     # while True:
     #     think.line_location_grayscale(sense.get_grayscale())
