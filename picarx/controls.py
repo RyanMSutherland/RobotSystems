@@ -41,14 +41,15 @@ class Interpret():
             if left > right:
                 self.robot_location = (middle - left)/max(left, middle)
                 if self.robot_location < 0:
-                    self.robot_location = abs(self.robot_location)
+                    self.robot_location = self.robot_location
                     return
-                self.robot_location = 1-self.robot_location
+                self.robot_location -= 1
                 return
             self.robot_location = (middle-right)/max(middle, right)
             if self.robot_location < 0:
+                self.robot_location = -1*self.robot_location
                 return
-            self.robot_location -= 1
+            self.robot_location = 1-self.robot_location
             return
         except:
             logging.debug(f'Divide by zero error, continuing')
@@ -70,7 +71,7 @@ class Control():
             self.error += car_position
             self.angle = self.k_p * car_position + self.error * self.k_i
             logging.debug(f'Steering Angle: {self.angle}')
-            px.set_dir_servo_angle(-self.angle)
+            px.set_dir_servo_angle(self.angle)
             return self.angle
         self.angle = 0
         logging.debug(f'Steering Angle: {self.angle}')
