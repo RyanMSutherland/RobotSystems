@@ -15,10 +15,11 @@ class Sense():
         self.reference = np.array(self.px.grayscale._reference)
         if camera:
             Vilib.camera_start()
+            time.sleep(0.5)
             #Vilib.display()
             self.path = "picarx"
             self.image_name = "image"
-            self.px.cam_pan(-30)
+            self.px.set_cam_tilt_angle(-30)
     
     def get_grayscale(self):
         return np.array(self.px.grayscale.read()) - self.reference
