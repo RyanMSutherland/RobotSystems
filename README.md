@@ -4,6 +4,14 @@ This version of the Picar-X system, originally developed by SunFounder, has been
 
 This was done for the purposes of ROB 515 - Introduction to Robotics II at Oregon State University.
 
+# Modified Files
+
+Sim_Robot_Hat - This replicates most of the robot functionality but is valid for simulation and does not inculde hardware control. This is mostly for code checking
+
+picarx/manuvering.py - This file lets the picar move forwards/backwards, parallel park and k-turn depending on user input
+
+picarx/control.py - This file allows for line following using a Sense, Think, Act loop using both the grayscale sensor and pi-camera
+
 # Picar-X
 
 Picar-X Python library for Raspberry Pi.
