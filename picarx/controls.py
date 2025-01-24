@@ -125,6 +125,7 @@ if __name__ == "__main__":
     time.sleep(2)
     sense.take_photo()
     think.line_location_camera(sense.path, sense.image_name)
+    think.robot_position()
     # sense.px.forward(20)
     # while True:
     #     think.line_location_grayscale(sense.get_grayscale())
