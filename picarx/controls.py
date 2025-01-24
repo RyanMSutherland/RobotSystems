@@ -70,7 +70,15 @@ class Interpret():
     def line_location_camera(self, path, image_name):
         gray_img = cv2.imread(f'{path}/{image_name}.jpg')
         gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
-        print(gray_img)
+
+        if self.polarity:
+            _, mask = cv2.threshold(gray_img, thresh = 180, maval=255, type = cv2.THRESH_BINARY_INV)
+        else:
+            _, mask = cv2.threshold(gray_img, thresh = 180, maval=255, type = cv2.THRESH_BINARY_INV)
+        
+        cv2.imshow("Gray", mask)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def robot_position(self):
         logging.debug(f'Robot Location: {self.robot_location}')
