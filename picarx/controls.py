@@ -75,6 +75,7 @@ class Interpret():
         gray_img = cv2.imread(f'{path}/{image_name}.jpg')
         gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
         gray_img = gray_img[self.img_cutoff:, :]
+        _, img_width, _ = gray_img.shape
         if self.polarity:
             _, mask = cv2.threshold(gray_img, thresh = self.thresh, maxval=self.colour, type = cv2.THRESH_BINARY_INV)
         else:
@@ -85,11 +86,12 @@ class Interpret():
         M = cv2.moments(largest_contour)
 
         if M['m00'] != 0:
-            cx = int(M['m10']/M['m00'])
-            cy = int(M['m01']/M['m00'])
-            cv2.circle(gray_img, (cx, cy), 5, (0, 0, 255), -1)
-        cv2.imshow("Gray", gray_img)
-        cv2.waitKey(0)
+            # cx = int(M['m10']/M['m00'])
+            # cy = int(M['m01']/M['m00'])
+            self.robot_location = (img_width - int(M['m01']/M['m00']))/img_width
+            # cv2.circle(gray_img, (cx, cy), 5, (0, 0, 255), -1)
+        # cv2.imshow("Gray", gray_img)
+        # cv2.waitKey(0)
         #cv2.destroyAllWindows()
 
     def robot_position(self):
