@@ -27,6 +27,7 @@ class Sense():
     def take_photo(self):
         logging.debug("Photo Taken")
         Vilib.take_photo(photo_name = self.image_name, path = self.path)
+        time.sleep(0.1)
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
@@ -72,9 +73,9 @@ class Interpret():
         gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
 
         if self.polarity:
-            _, mask = cv2.threshold(gray_img, thresh = 180, maval=255, type = cv2.THRESH_BINARY_INV)
+            _, mask = cv2.threshold(gray_img, thresh = 180, maxval=255, type = cv2.THRESH_BINARY_INV)
         else:
-            _, mask = cv2.threshold(gray_img, thresh = 180, maval=255, type = cv2.THRESH_BINARY_INV)
+            _, mask = cv2.threshold(gray_img, thresh = 180, maxval=255, type = cv2.THRESH_BINARY_INV)
         
         cv2.imshow("Gray", mask)
         cv2.waitKey(0)
