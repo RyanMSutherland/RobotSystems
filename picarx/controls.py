@@ -86,7 +86,7 @@ if __name__ == "__main__":
     think = Interpret(polarity = False)
     control = Control()
     time.sleep(5)
-    sense.get_camera_image()
+    # sense.get_camera_image()
     # sense.px.forward(20)
     # while True:
     #     think.line_location_grayscale(sense.get_grayscale())

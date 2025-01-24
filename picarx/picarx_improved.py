@@ -17,7 +17,7 @@ except ImportError:
 
 import logging 
 time.sleep(0.2)
-reset_mcu()
+
 
 def constrain(x, min_val, max_val):
     '''
