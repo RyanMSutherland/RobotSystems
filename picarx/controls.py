@@ -20,7 +20,8 @@ class Sense():
         return np.array(self.px.grayscale.read()) - self.reference
     
     def take_photo(self):
-        Vilib.take_photo(photo_name = self.path, path = "image.jpg")
+        logging.debug("Photo Taken)")
+        Vilib.take_photo(photo_name = "image.jpg", path = self.path)
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
