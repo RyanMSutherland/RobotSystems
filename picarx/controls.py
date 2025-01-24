@@ -17,8 +17,8 @@ class Sense():
         return np.array(self.px.grayscale.read()) - self.reference
     
     def get_camera_image(self):
-        Vilib.camera_start(vflip=False,hflip=False)
-        Vilib.display(local=True,web=True)
+        Vilib.camera_start()
+        Vilib.display()
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
