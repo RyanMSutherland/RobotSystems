@@ -12,13 +12,11 @@ class Sense():
     def __init__(self):
         self.px = Picarx()
         self.reference = np.array(self.px.grayscale._reference)
+        Vilib.camera_start()
+        Vilib.display()
     
     def get_grayscale(self):
         return np.array(self.px.grayscale.read()) - self.reference
-    
-    def get_camera_image(self):
-        Vilib.camera_start()
-        Vilib.display()
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
