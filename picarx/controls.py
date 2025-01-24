@@ -14,7 +14,7 @@ class Sense():
         self.reference = np.array(self.px.grayscale._reference)
         Vilib.camera_start()
         #Vilib.display()
-        self.path = "~/RobotSystems/picarx/"
+        self.path = "~/RobotSystems/picarx"
     
     def get_grayscale(self):
         return np.array(self.px.grayscale.read()) - self.reference
