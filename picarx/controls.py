@@ -79,7 +79,7 @@ class Interpret():
         
         cv2.imshow("Gray", mask)
         cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        #cv2.destroyAllWindows()
 
     def robot_position(self):
         logging.debug(f'Robot Location: {self.robot_location}')
