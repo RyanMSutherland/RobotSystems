@@ -123,8 +123,10 @@ if __name__ == "__main__":
     think = Interpret(polarity = False)
     control = Control()
     time.sleep(2)
-    # sense.px.forward(20)
-    # while True:
-    #     think.line_location_grayscale(sense.get_grayscale())
-    #     robot_position = think.robot_position()
-    #     control.steer(sense.px, robot_position)
+    sense.px.forward(20)
+    while True:
+        # think.line_location_grayscale(sense.get_grayscale())
+        sense.take_photo()
+        think.line_location_camera(sense.path, sense.image_name)
+        robot_position = think.robot_position()
+        control.steer(sense.px, robot_position)
