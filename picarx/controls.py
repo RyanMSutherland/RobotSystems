@@ -9,14 +9,18 @@ logging.basicConfig(format=logging_format, level = logging.INFO, datefmt="%H:%M:
 logging.getLogger().setLevel(logging.DEBUG)
 
 class Sense():
-    def __init__(self):
+    def __init__(self, camera = False):
         self.px = Picarx()
         self.reference = np.array(self.px.grayscale._reference)
         Vilib.camera_start()
         Vilib.display()
+        self.path = "~/RobotSystems/picarx/"
     
     def get_grayscale(self):
         return np.array(self.px.grayscale.read()) - self.reference
+    
+    def take_photo(self):
+        Vilib.take_photo(photo_name = self.path, path = self.path)
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
@@ -82,11 +86,11 @@ class Control():
         return self.angle
 
 if __name__ == "__main__":
-    sense = Sense()
+    sense = Sense(camera=True)
     think = Interpret(polarity = False)
     control = Control()
     time.sleep(5)
-    # sense.get_camera_image()
+    sense.take_photo()
     # sense.px.forward(20)
     # while True:
     #     think.line_location_grayscale(sense.get_grayscale())
