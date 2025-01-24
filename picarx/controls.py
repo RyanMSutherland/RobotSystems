@@ -15,13 +15,14 @@ class Sense():
         Vilib.camera_start()
         #Vilib.display()
         self.path = "picarx"
+        self.image_name = "image"
     
     def get_grayscale(self):
         return np.array(self.px.grayscale.read()) - self.reference
     
     def take_photo(self):
         logging.debug("Photo Taken)")
-        Vilib.take_photo(photo_name = "image.jpg", path = self.path)
+        Vilib.take_photo(photo_name = self.image_name, path = self.path)
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
