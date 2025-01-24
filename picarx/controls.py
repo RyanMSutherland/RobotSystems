@@ -91,7 +91,7 @@ class Interpret():
         if M['m00'] != 0:
             # cx = int(M['m10']/M['m00'])
             # cy = int(M['m01']/M['m00'])
-            self.robot_location = (img_width/2 - int(M['m10']/M['m00']))/img_width
+            self.robot_location = (int(M['m10']/M['m00']) - img_width/2)/img_width
             # cv2.circle(gray_img, (cx, cy), 5, (0, 0, 255), -1)
         # cv2.imshow("Gray", gray_img)
         # cv2.waitKey(0)
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     think = Interpret(polarity = False)
     control = Control()
     time.sleep(2)
-    sense.px.forward(20)
+    # sense.px.forward(20)
     while True:
         # think.line_location_grayscale(sense.get_grayscale())
         sense.take_photo()
