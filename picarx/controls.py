@@ -1,4 +1,5 @@
 from picarx_improved import Picarx
+from vilib import Vilib
 import time
 import logging
 import numpy as np
@@ -14,6 +15,10 @@ class Sense():
     
     def get_grayscale(self):
         return np.array(self.px.grayscale.read()) - self.reference
+    
+    def get_camera_image(self):
+        Vilib.camera_start(vflip=False,hflip=False)
+        Vilib.display(local=True,web=True)
 
 class Interpret():
     def __init__(self, range = [0, 3600], polarity = False):
@@ -28,7 +33,7 @@ class Interpret():
         self.polarity = polarity
         self.robot_location = 0
     
-    def line_location(self, grayscale_values):
+    def line_location_grayscale(self, grayscale_values):
         if self.polarity:
             grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
         else:
@@ -83,8 +88,9 @@ if __name__ == "__main__":
     think = Interpret(polarity = False)
     control = Control()
     time.sleep(5)
-    sense.px.forward(20)
-    while True:
-        think.line_location(sense.get_grayscale())
-        robot_position = think.robot_position()
-        control.steer(sense.px, robot_position)
+    sense.get_camera_image()
+    # sense.px.forward(20)
+    # while True:
+    #     think.line_location_grayscale(sense.get_grayscale())
+    #     robot_position = think.robot_position()
+    #     control.steer(sense.px, robot_position)
