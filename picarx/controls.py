@@ -130,9 +130,19 @@ if __name__ == "__main__":
     control = Control(threshold = 0.05)
     time.sleep(2)
     sense.px.forward(30)
-    while True:
-        # think.line_location_grayscale(sense.get_grayscale())
-        sense.take_photo()
-        think.line_location_camera(sense.path, sense.image_name)
-        robot_position = think.robot_position()
-        control.steer(sense.px, robot_position)
+    method = 0
+
+    while method != 1 or method != 2:
+        method = int(input("Select 1 for grayscale or 2 for camera based line following: "))
+    
+    if method == 1:
+        while True:
+            think.line_location_grayscale(sense.get_grayscale())
+            robot_position = think.robot_position()
+            control.steer(sense.px, robot_position)
+    elif method == 2: 
+        while True:
+            sense.take_photo()
+            think.line_location_camera(sense.path, sense.image_name)
+            robot_position = think.robot_position()
+            control.steer(sense.px, robot_position)
