@@ -104,9 +104,7 @@ class Interpret():
         logging.debug(f'Robot Location: {self.robot_location}')
         return self.robot_location
 
-class Control():
-    def __init__(self, k_p = 35.0, k_i = 0.0, threshold = 0.15):
-        self.k_p = k_p
+
         self.k_i = k_i
         self.threshold = threshold
         self.error = 0.0
@@ -125,15 +123,14 @@ class Control():
         return self.angle
 
 if __name__ == "__main__":
+    method = 0
+    while method != 1 or method != 2:
+        method = int(input("Select 1 for grayscale or 2 for camera based line following: "))
     sense = Sense(camera=True)
     think = Interpret(polarity = False)
     control = Control(threshold = 0.05)
     time.sleep(2)
     sense.px.forward(30)
-    method = 0
-
-    while method != 1 or method != 2:
-        method = int(input("Select 1 for grayscale or 2 for camera based line following: "))
     
     if method == 1:
         while True:
