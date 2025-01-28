@@ -104,23 +104,25 @@ class Interpret():
         logging.debug(f'Robot Location: {self.robot_location}')
         return self.robot_location
 
-
-        self.k_i = k_i
-        self.threshold = threshold
-        self.error = 0.0
-        self.angle = 0.0
+class Control():
+        def __init__(self, k_p = 0.25, k_i = 0.0, threshold = 0.1):
+            self.k_p = k_p
+            self.k_i = k_i
+            self.threshold = threshold
+            self.error = 0.0
+            self.angle = 0.0
     
-    def steer(self, px, car_position):
-        if abs(car_position) > self.threshold:
-            self.error += car_position
-            self.angle = self.k_p * car_position + self.error * self.k_i
+        def steer(self, px, car_position):
+            if abs(car_position) > self.threshold:
+                self.error += car_position
+                self.angle = self.k_p * car_position + self.error * self.k_i
+                logging.debug(f'Steering Angle: {self.angle}')
+                px.set_dir_servo_angle(self.angle)
+                return self.angle
+            self.angle = 0
             logging.debug(f'Steering Angle: {self.angle}')
             px.set_dir_servo_angle(self.angle)
             return self.angle
-        self.angle = 0
-        logging.debug(f'Steering Angle: {self.angle}')
-        px.set_dir_servo_angle(self.angle)
-        return self.angle
 
 if __name__ == "__main__":
     method = 0
