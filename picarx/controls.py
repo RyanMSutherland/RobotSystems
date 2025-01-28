@@ -105,7 +105,7 @@ class Interpret():
         return self.robot_location
 
 class Control():
-        def __init__(self, k_p = 0.25, k_i = 0.0, threshold = 0.1):
+        def __init__(self, k_p = 25, k_i = 0.0, threshold = 0.1):
             self.k_p = k_p
             self.k_i = k_i
             self.threshold = threshold
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     if method == 1:
         sense = Sense(camera=False)
         think = Interpret(polarity = False)
-        control = Control(threshold = 0.05)
+        control = Control(threshold = 0.2)
         time.sleep(2)
         sense.px.forward(30)
         while True:
