@@ -163,25 +163,29 @@ class Control():
 class Bus():
     def __init__(self):
         self.message = None
-        # self.lock = rwlock.RWLockWriteD()
+        self.lock = rwlock.RWLockWriteD()
 
     def write(self, message):
+        logging.debug("LOCKING - Write")
         with self.lock.gen_wlock():
+            logging.debug("LOCKED - Write")
             self.message = message
-        logging.debug(f'Write message: {self.message}')
+        logging.debug(f'UNLOCKED - Write, Write message: {self.message}')
 
     def read(self):
-        logging.debug("About to read message")
+        logging.debug("LOCKING - READ - About to read message")
         with self.lock.gen_rlock():
+            logging.debug("LOCKED - READ")
             logging.debug(f'Read message: {self.message}')
             message = self.message
+        logging.debug("UNLOCKED - READ")
         return message
 
 if __name__ == "__main__":
     method = 0
     px = Picarx()
-    while method != 1 and method != 2:
-        method = int(input("Select 1 for grayscale or 2 for camera based line following: "))
+    # while method != 1 and method != 2:
+    #     method = int(input("Select 1 for grayscale or 2 for camera based line following: "))
     
     sense_interpret_bus = Bus()
     interpret_control_bus = Bus()
@@ -197,11 +201,11 @@ if __name__ == "__main__":
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         eSensor = executor.submit(sense.set_grayscale_to_bus)
         eInterpreter = executor.submit(think.line_location_grayscale)
-        eControl = executor.submit(control.steer)
+        # eControl = executor.submit(control.steer)
     
     eSensor.result()
     eInterpreter.result()
-    eControl.result()
+    # eControl.result()
     
     # if method == 1:
     #     sense = Sense(px = px, camera=False)
