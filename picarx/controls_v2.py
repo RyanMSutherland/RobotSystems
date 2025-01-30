@@ -38,6 +38,7 @@ class Sense():
     def set_grayscale(self):
         while True:
             self.sense_interpret_bus.write(self.get_grayscale())
+            logging.debug("Set grayscale")
             time.sleep(self.sense_delay)
 
 class Interpret():
