@@ -204,8 +204,9 @@ if __name__ == "__main__":
         eInterpreter = executor.submit(think.line_location_grayscale)
         # eControl = executor.submit(control.steer)
     
-    eSensor.result()
     eInterpreter.result()
+    eSensor.result()
+    
     # eControl.result()
     
     # if method == 1:
