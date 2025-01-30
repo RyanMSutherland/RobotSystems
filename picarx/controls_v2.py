@@ -189,7 +189,7 @@ if __name__ == "__main__":
     control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.1)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-        eSensor = executor.submit(sense.get_grayscale)
+        eSensor = executor.submit(sense.set_grayscale)
         eInterpreter = executor.submit(think.line_location_grayscale)
         eControl = executor.submit(control.steer)
     
