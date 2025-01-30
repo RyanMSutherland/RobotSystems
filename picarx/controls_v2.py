@@ -25,7 +25,7 @@ class Sense():
             self.image_name = "image"
             self.px.set_cam_tilt_angle(-30)
     
-    def get_grayscale(self):
+    def get_grayscale_from_hardware(self):
         return np.array(self.px.grayscale.read()) - self.reference
     
     def take_photo(self):
@@ -35,9 +35,9 @@ class Sense():
             self.sense_interpret_bus.write(f'{self.path}/{self.image_name}')
             time.sleep(self.sense_delay)
     
-    def set_grayscale(self):
+    def set_grayscale_to_bus(self):
         while True:
-            self.sense_interpret_bus.write(self.get_grayscale())
+            self.sense_interpret_bus.write(self.get_grayscale_from_hardware())
             time.sleep(self.sense_delay)
 
 class Interpret():
@@ -166,15 +166,15 @@ class Bus():
         # self.lock = rwlock.RWLockWriteD()
 
     def write(self, message):
-        # with self.lock.gen_wlock():
-        #     self.message = message
-            logging.debug(f'Write message: {self.message}')
+        with self.lock.gen_wlock():
+            self.message = message
+        logging.debug(f'Write message: {self.message}')
 
     def read(self):
         logging.debug("About to read message")
-        # with self.lock.gen_rlock():
-        logging.debug(f'Read message: {self.message}')
-        message = self.message
+        with self.lock.gen_rlock():
+            logging.debug(f'Read message: {self.message}')
+            message = self.message
         return message
 
 if __name__ == "__main__":
@@ -191,11 +191,11 @@ if __name__ == "__main__":
 
     sense = Sense(px = px, sense_interpret_bus=sense_interpret_bus, sense_delay=sense_delay, camera = False)
     think = Interpret(sense_interpret_bus=sense_interpret_bus, interpret_control_bus=interpret_control_bus, 
-                      sense_delay = sense_delay*2, control_delay = control_delay, polarity = False)
-    control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay*2, px = px, threshold = 0.1)
+                      sense_delay = sense_delay, control_delay = control_delay, polarity = False)
+    control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.1)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-        eSensor = executor.submit(sense.set_grayscale)
+        eSensor = executor.submit(sense.set_grayscale_to_bus)
         eInterpreter = executor.submit(think.line_location_grayscale)
         eControl = executor.submit(control.steer)
     
