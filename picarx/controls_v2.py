@@ -64,6 +64,7 @@ class Interpret():
     def line_location_grayscale(self):
         while True:
             try:
+                logging.debug("About to request grayscale")
                 grayscale_values = self.sense_interpret_bus.read()
                 if self.polarity:
                     grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
@@ -96,7 +97,7 @@ class Interpret():
 
     def line_location_camera(self):
         while True:
-            logging.debug("About to request grayscale")
+            logging.debug("About to request camera")
             file_name = self.sense_interpret_bus.read()
             gray_img = cv2.imread(f'{file_name}.jpg')
             gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
