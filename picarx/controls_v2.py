@@ -170,7 +170,7 @@ class Bus():
 
     def read(self):
         with self.lock.gen_rlock():
-            message = self.message
+            return self.message
 
 if __name__ == "__main__":
     method = 0
