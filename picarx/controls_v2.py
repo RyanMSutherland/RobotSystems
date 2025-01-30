@@ -163,18 +163,18 @@ class Control():
 class Bus():
     def __init__(self):
         self.message = None
-        self.lock = rwlock.RWLockWriteD()
+        # self.lock = rwlock.RWLockWriteD()
 
     def write(self, message):
-        with self.lock.gen_wlock():
-            self.message = message
+        # with self.lock.gen_wlock():
+        #     self.message = message
             logging.debug(f'Write message: {self.message}')
 
     def read(self):
         logging.debug("About to read message")
-        with self.lock.gen_rlock():
-            logging.debug(f'Read message: {self.message}')
-            message = self.message
+        # with self.lock.gen_rlock():
+        logging.debug(f'Read message: {self.message}')
+        message = self.message
         return message
 
 if __name__ == "__main__":
