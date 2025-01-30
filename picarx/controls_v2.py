@@ -182,8 +182,8 @@ if __name__ == "__main__":
     sense_interpret_bus = Bus()
     interpret_control_bus = Bus()
 
-    sense_delay = 0.1
-    control_delay = 0.1
+    sense_delay = 0.2
+    control_delay = 0.2
 
     sense = Sense(px = px, sense_interpret_bus=sense_interpret_bus, sense_delay=sense_delay, camera = False)
     think = Interpret(sense_interpret_bus=sense_interpret_bus, interpret_control_bus=interpret_control_bus, 
@@ -195,9 +195,9 @@ if __name__ == "__main__":
         eInterpreter = executor.submit(think.line_location_grayscale)
         eControl = executor.submit(control.steer)
     
-    eSensor.result()
-    eInterpreter.result()
-    eControl.result()
+    # eSensor.result()
+    # eInterpreter.result()
+    # eControl.result()
     
     # if method == 1:
     #     sense = Sense(px = px, camera=False)
