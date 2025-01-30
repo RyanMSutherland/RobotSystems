@@ -63,32 +63,36 @@ class Interpret():
     
     def line_location_grayscale(self):
         while True:
-            grayscale_values = self.sense_interpret_bus.read()
-            if self.polarity:
-                grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
-            else:
-                grayscale_values = [abs(grayscale_value - max(grayscale_values)) for grayscale_value in grayscale_values] 
-
-            left, middle, right = grayscale_values
-            logging.debug(f'MODIFIED - Left: {left}, Middle: {middle}, Right: {right}')
-
             try:
-                if left > right:
-                    self.robot_location = (middle - left)/max(left, middle)
-                    if self.robot_location < 0:
-                        self.robot_location = self.robot_location
+                grayscale_values = self.sense_interpret_bus.read()
+                if self.polarity:
+                    grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
+                else:
+                    grayscale_values = [abs(grayscale_value - max(grayscale_values)) for grayscale_value in grayscale_values] 
+
+                left, middle, right = grayscale_values
+                logging.debug(f'MODIFIED - Left: {left}, Middle: {middle}, Right: {right}')
+
+                try:
+                    if left > right:
+                        self.robot_location = (middle - left)/max(left, middle)
+                        if self.robot_location < 0:
+                            self.robot_location = self.robot_location
+                            return
+                        self.robot_location -= 1
                         return
-                    self.robot_location -= 1
+                    self.robot_location = (middle-right)/max(middle, right)
+                    if self.robot_location < 0:
+                        self.robot_location = -1*self.robot_location
+                        return
+                    self.robot_location = 1-self.robot_location
                     return
-                self.robot_location = (middle-right)/max(middle, right)
-                if self.robot_location < 0:
-                    self.robot_location = -1*self.robot_location
-                    return
-                self.robot_location = 1-self.robot_location
-                return
+                except:
+                    logging.debug(f'Divide by zero error, continuing')
+                time.sleep(sense_delay)
             except:
-                logging.debug(f'Divide by zero error, continuing')
-            time.sleep(sense_delay)
+                logging.debug(f'Grayscale not initialized, passing')
+                time.sleep(sense_delay)
 
     def line_location_camera(self):
         while True:
