@@ -63,6 +63,7 @@ class Interpret():
     
     def line_location_grayscale(self):
         while True:
+            logging.debug("Start")
             try:
                 logging.debug("About to request grayscale")
                 grayscale_values = self.sense_interpret_bus.read()
