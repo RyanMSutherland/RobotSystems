@@ -171,6 +171,7 @@ class Bus():
             logging.debug(f'Write message: {self.message}')
 
     def read(self):
+        logging.debug("About to read message")
         with self.lock.gen_rlock():
             logging.debug(f'Read message: {self.message}')
             message = self.message
