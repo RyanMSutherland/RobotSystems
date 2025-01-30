@@ -172,7 +172,8 @@ class Bus():
     def read(self):
         with self.lock.gen_rlock():
             logging.debug(f'Read message: {self.message}')
-            return self.message
+            message = self.message
+        return message
 
 if __name__ == "__main__":
     method = 0
