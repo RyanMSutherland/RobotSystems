@@ -231,8 +231,8 @@ if __name__ == "__main__":
         time.sleep(2)
         sense.px.forward(30)
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-            eSensor = executor.submit(sense.set_grayscale_to_bus)
-            eInterpreter = executor.submit(think.line_location_grayscale)
+            eSensor = executor.submit(sense.take_photo)
+            eInterpreter = executor.submit(think.line_location_camera)
             eRobot = executor.submit(think.robot_position)
             eControl = executor.submit(control.steer)
     eInterpreter.result()
