@@ -145,6 +145,7 @@ class Interpret():
 
     def robot_position(self):
         while True:
+            logging.debug("WRITE ROBOT POSITION")
             try:
                 self.interpret_control_bus.write(self.robot_location)
                 logging.debug(f'Robot Location: {self.robot_location}')
