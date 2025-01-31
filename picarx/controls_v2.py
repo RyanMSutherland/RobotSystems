@@ -170,7 +170,7 @@ class Control():
 
 class Bus():
     def __init__(self):
-        self.message = None
+        self.message = -0.5
         self.lock = rwlock.RWLockWrite()
 
     def write(self, message):
@@ -207,12 +207,12 @@ if __name__ == "__main__":
     control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.1)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-        eSensor = executor.submit(sense.set_grayscale_to_bus)
+        # eSensor = executor.submit(sense.set_grayscale_to_bus)
         eInterpreter = executor.submit(think.line_location_grayscale)
         eControl = executor.submit(control.steer)
     
     eInterpreter.result()
-    eSensor.result()
+    # eSensor.result()
     eControl.result()
     
     # if method == 1:
