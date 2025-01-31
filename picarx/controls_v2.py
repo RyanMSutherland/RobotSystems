@@ -202,49 +202,40 @@ class Bus():
 if __name__ == "__main__":
     method = 0
     px = Picarx()
-    # while method != 1 and method != 2:
-    #     method = int(input("Select 1 for grayscale or 2 for camera based line following: "))
+    while method != 1 and method != 2:
+        method = int(input("Select 1 for grayscale or 2 for camera based line following: "))
     
     sense_interpret_bus = Bus()
     interpret_control_bus = Bus()
 
     sense_delay = 0.1
     control_delay = 0.1
-
-    sense = Sense(px = px, sense_interpret_bus=sense_interpret_bus, sense_delay=sense_delay, camera = False)
-    think = Interpret(sense_interpret_bus=sense_interpret_bus, interpret_control_bus=interpret_control_bus, 
-                      sense_delay = sense_delay, control_delay = control_delay, polarity = False)
-    control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.1)
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-        eSensor = executor.submit(sense.set_grayscale_to_bus)
-        eInterpreter = executor.submit(think.line_location_grayscale)
-        eRobot = executor.submit(think.robot_position)
-        eControl = executor.submit(control.steer)
-    px.forward(20)
+    
+    if method == 1:
+        sense = Sense(px = px, sense_interpret_bus=sense_interpret_bus, sense_delay=sense_delay, camera = False)
+        think = Interpret(sense_interpret_bus=sense_interpret_bus, interpret_control_bus=interpret_control_bus, 
+                        sense_delay = sense_delay, control_delay = control_delay, polarity = False)
+        control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.1)
+        time.sleep(2)
+        sense.px.forward(30)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            eSensor = executor.submit(sense.set_grayscale_to_bus)
+            eInterpreter = executor.submit(think.line_location_grayscale)
+            eRobot = executor.submit(think.robot_position)
+            eControl = executor.submit(control.steer)
+    elif method == 2:
+        sense = Sense(px = px, sense_interpret_bus=sense_interpret_bus, sense_delay=sense_delay, camera = True)
+        think = Interpret(sense_interpret_bus=sense_interpret_bus, interpret_control_bus=interpret_control_bus, 
+                        sense_delay = sense_delay, control_delay = control_delay, polarity = False)
+        control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.5)
+        time.sleep(2)
+        sense.px.forward(30)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+            eSensor = executor.submit(sense.set_grayscale_to_bus)
+            eInterpreter = executor.submit(think.line_location_grayscale)
+            eRobot = executor.submit(think.robot_position)
+            eControl = executor.submit(control.steer)
     eInterpreter.result()
     eSensor.result()
     eControl.result()
     eRobot.result()
-    
-    # if method == 1:
-    #     sense = Sense(px = px, camera=False)
-    #     think = Interpret(polarity = False)
-    #     control = Control(px = px, threshold = 0.1)
-    #     time.sleep(2)
-    #     sense.px.forward(30)
-    #     while True:
-    #         think.line_location_grayscale(sense.get_grayscale())
-    #         robot_position = think.robot_position()
-    #         control.steer(robot_position)
-    # elif method == 2:
-    #     sense = Sense(camera=True)
-    #     think = Interpret(polarity = False)
-    #     control = Control(threshold = 0.05)
-    #     time.sleep(2)
-    #     sense.px.forward(30) 
-    #     while True:
-    #         sense.take_photo()
-    #         think.line_location_camera(sense.path, sense.image_name)
-    #         robot_position = think.robot_position()
-    #         control.steer(robot_position)
