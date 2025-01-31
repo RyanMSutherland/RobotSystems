@@ -1,5 +1,8 @@
 from picarx_improved import Picarx
-from vilib import Vilib
+try:
+    from vilib import Vilib
+except:
+    pass
 import time
 import logging
 import numpy as np
@@ -148,18 +151,22 @@ class Control():
     
         def steer(self):
             while True:
-                car_position = self.interpret_control_bus.read()
-                if abs(car_position) > self.threshold:
-                    self.error += car_position
-                    self.angle = self.k_p * car_position + self.error * self.k_i
-                    logging.debug(f'Steering Angle: {self.angle}')
-                    self.px.set_dir_servo_angle(self.angle)
-                    break
-                else:
-                    self.angle = 0
-                    logging.debug(f'Steering Angle: {self.angle}')
-                    self.px.set_dir_servo_angle(self.angle)
-                time.sleep(self.control_delay)
+                try:
+                    logging.debug("Steering")
+                    car_position = self.interpret_control_bus.read()
+                    if abs(car_position) > self.threshold:
+                        self.error += car_position
+                        self.angle = self.k_p * car_position + self.error * self.k_i
+                        logging.debug(f'Steering Angle: {self.angle}')
+                        self.px.set_dir_servo_angle(self.angle)
+                        break
+                    else:
+                        self.angle = 0
+                        logging.debug(f'Steering Angle: {self.angle}')
+                        self.px.set_dir_servo_angle(self.angle)
+                    time.sleep(self.control_delay)
+                except:
+                    logging.debug("No steering provided")
 
 class Bus():
     def __init__(self):
@@ -191,8 +198,8 @@ if __name__ == "__main__":
     sense_interpret_bus = Bus()
     interpret_control_bus = Bus()
 
-    sense_delay = 0.2
-    control_delay = 0.2
+    sense_delay = 5
+    control_delay = 5
 
     sense = Sense(px = px, sense_interpret_bus=sense_interpret_bus, sense_delay=sense_delay, camera = False)
     think = Interpret(sense_interpret_bus=sense_interpret_bus, interpret_control_bus=interpret_control_bus, 
@@ -202,12 +209,11 @@ if __name__ == "__main__":
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
         eSensor = executor.submit(sense.set_grayscale_to_bus)
         eInterpreter = executor.submit(think.line_location_grayscale)
-        # eControl = executor.submit(control.steer)
+        eControl = executor.submit(control.steer)
     
     eInterpreter.result()
     eSensor.result()
-    
-    # eControl.result()
+    eControl.result()
     
     # if method == 1:
     #     sense = Sense(px = px, camera=False)
