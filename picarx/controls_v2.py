@@ -66,7 +66,6 @@ class Interpret():
     
     def line_location_grayscale(self):
         while True:
-            logging.debug("Start")
             try:
                 logging.debug("About to request grayscale")
                 grayscale_values = self.sense_interpret_bus.read()
@@ -83,15 +82,19 @@ class Interpret():
                         self.robot_location = (middle - left)/max(left, middle)
                         if self.robot_location < 0:
                             self.robot_location = self.robot_location
-                            return
+                            time.sleep(sense_delay)
+                            continue
                         self.robot_location -= 1
-                        return
+                        time.sleep(sense_delay)
+                        continue
                     self.robot_location = (middle-right)/max(middle, right)
                     if self.robot_location < 0:
                         self.robot_location = -1*self.robot_location
-                        return
+                        time.sleep(sense_delay)
+                        continue
                     self.robot_location = 1-self.robot_location
-                    return
+                    time.sleep(sense_delay)
+                    continue
                 except:
                     logging.debug(f'Divide by zero error, continuing')
                 time.sleep(sense_delay)
@@ -120,7 +123,7 @@ class Interpret():
             except:
                 logging.debug("NO CONTOUR FOUND")
                 time.sleep(self.sense_delay)
-                return 
+                continue 
 
             if M['m00'] != 0:
                 # cx = int(M['m10']/M['m00'])
@@ -159,14 +162,18 @@ class Control():
                         self.angle = self.k_p * car_position + self.error * self.k_i
                         logging.debug(f'Steering Angle: {self.angle}')
                         self.px.set_dir_servo_angle(self.angle)
-                        break
+                        time.sleep(sense_delay)
+                        continue
                     else:
                         self.angle = 0
                         logging.debug(f'Steering Angle: {self.angle}')
                         self.px.set_dir_servo_angle(self.angle)
+                    logging.debug("Pre-sleep")
                     time.sleep(self.control_delay)
+                    logging.debug("Wakey time")
                 except:
                     logging.debug("No steering provided")
+                time.sleep(sense_delay)
 
 class Bus():
     def __init__(self):
