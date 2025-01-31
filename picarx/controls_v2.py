@@ -45,6 +45,7 @@ class Sense():
         while True:
             try:
                 self.sense_interpret_bus.write(self.get_grayscale_from_hardware())
+                logging.debug("Set greyscale")
             except:
                 logging.debug("No greyscale found")
             time.sleep(self.sense_delay)
