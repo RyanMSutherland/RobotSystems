@@ -227,7 +227,7 @@ if __name__ == "__main__":
         sense = Sense(px = px, sense_interpret_bus=sense_interpret_bus, sense_delay=sense_delay, camera = True)
         think = Interpret(sense_interpret_bus=sense_interpret_bus, interpret_control_bus=interpret_control_bus, 
                         sense_delay = sense_delay, control_delay = control_delay, polarity = False)
-        control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.5)
+        control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.05)
         time.sleep(2)
         sense.px.forward(30)
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
