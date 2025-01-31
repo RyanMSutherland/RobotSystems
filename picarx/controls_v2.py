@@ -155,7 +155,6 @@ class Control():
         def steer(self):
             while True:
                 try:
-                    logging.debug("Steering")
                     car_position = self.interpret_control_bus.read()
                     if abs(car_position) > self.threshold:
                         self.error += car_position
@@ -188,12 +187,10 @@ class Bus():
         logging.debug(f'UNLOCKED - Write, Write message: {self.message}')
 
     def read(self):
-        logging.debug("LOCKING - READ - About to read message")
         with self.lock.gen_rlock():
             logging.debug("LOCKED - READ")
             logging.debug(f'Read message: {self.message}')
             message = self.message
-        logging.debug("UNLOCKED - READ")
         return message
 
 if __name__ == "__main__":
@@ -214,12 +211,12 @@ if __name__ == "__main__":
     control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.1)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-        # eSensor = executor.submit(sense.set_grayscale_to_bus)
+        eSensor = executor.submit(sense.set_grayscale_to_bus)
         eInterpreter = executor.submit(think.line_location_grayscale)
         eControl = executor.submit(control.steer)
     
     eInterpreter.result()
-    # eSensor.result()
+    eSensor.result()
     eControl.result()
     
     # if method == 1:
