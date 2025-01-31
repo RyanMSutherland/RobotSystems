@@ -164,7 +164,7 @@ class Control():
 class Bus():
     def __init__(self):
         self.message = None
-        self.lock = rwlock.RWLockWriteD()
+        self.lock = rwlock.RWLockWrite()
 
     def write(self, message):
         logging.debug("LOCKING - Write")
