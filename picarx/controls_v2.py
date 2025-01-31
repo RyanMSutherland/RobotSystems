@@ -70,14 +70,6 @@ class Interpret():
         self.colour = 255
         self.img_start = 350
         self.img_cutoff = 425
-
-    def interpret_grayscale(self):
-        self.line_location_grayscale()
-        self.robot_position()
-
-    def interpret_camera(self):
-        self.line_location_camera()
-        self.robot_position()
     
     def line_location_grayscale(self):
         while True:
@@ -224,14 +216,16 @@ if __name__ == "__main__":
                       sense_delay = sense_delay, control_delay = control_delay, polarity = False)
     control = Control(interpret_control_bus=interpret_control_bus, control_delay=control_delay, px = px, threshold = 0.1)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         eSensor = executor.submit(sense.set_grayscale_to_bus)
-        eInterpreter = executor.submit(think.interpret_grayscale)
+        eInterpreter = executor.submit(think.line_location_grayscale)
+        eRobot = executor.submit(think.robot_position)
         eControl = executor.submit(control.steer)
     
     eInterpreter.result()
     eSensor.result()
     eControl.result()
+    eRobot.result()
     
     # if method == 1:
     #     sense = Sense(px = px, camera=False)
