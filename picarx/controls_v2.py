@@ -33,14 +33,20 @@ class Sense():
     
     def take_photo(self):
         while True:
-            logging.debug("Photo Taken")
-            Vilib.take_photo(photo_name = self.image_name, path = self.path)
-            self.sense_interpret_bus.write(f'{self.path}/{self.image_name}')
+            try:
+                Vilib.take_photo(photo_name = self.image_name, path = self.path)
+                self.sense_interpret_bus.write(f'{self.path}/{self.image_name}')
+                logging.debug("Photo Taken")
+            except:
+                logging.debug("Photo Failed")
             time.sleep(self.sense_delay)
     
     def set_grayscale_to_bus(self):
         while True:
-            self.sense_interpret_bus.write(self.get_grayscale_from_hardware())
+            try:
+                self.sense_interpret_bus.write(self.get_grayscale_from_hardware())
+            except:
+                logging.debug("No greyscale found")
             time.sleep(self.sense_delay)
 
 class Interpret():
@@ -67,7 +73,6 @@ class Interpret():
     def line_location_grayscale(self):
         while True:
             try:
-                logging.debug("About to request grayscale")
                 grayscale_values = self.sense_interpret_bus.read()
                 if self.polarity:
                     grayscale_values = [grayscale_value - min(grayscale_values) for grayscale_value in grayscale_values] 
@@ -104,41 +109,46 @@ class Interpret():
 
     def line_location_camera(self):
         while True:
-            logging.debug("About to request camera")
-            file_name = self.sense_interpret_bus.read()
-            gray_img = cv2.imread(f'{file_name}.jpg')
-            gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
-            gray_img = gray_img[self.img_start:self.img_cutoff, :]
-            _, img_width = gray_img.shape
-            img_width /= 2
-            if self.polarity:
-                _, mask = cv2.threshold(gray_img, thresh = self.thresh, maxval=self.colour, type = cv2.THRESH_BINARY)
-            else:
-                _, mask = cv2.threshold(gray_img, thresh = self.thresh, maxval=self.colour, type = cv2.THRESH_BINARY_INV)
-            
             try:
-                contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-                largest_contour = max(contours, key=cv2.contourArea)
-                M = cv2.moments(largest_contour)
-            except:
-                logging.debug("NO CONTOUR FOUND")
-                time.sleep(self.sense_delay)
-                continue 
+                file_name = self.sense_interpret_bus.read()
+                gray_img = cv2.imread(f'{file_name}.jpg')
+                gray_img = cv2.cvtColor(gray_img, cv2.COLOR_BGR2GRAY)
+                gray_img = gray_img[self.img_start:self.img_cutoff, :]
+                _, img_width = gray_img.shape
+                img_width /= 2
+                if self.polarity:
+                    _, mask = cv2.threshold(gray_img, thresh = self.thresh, maxval=self.colour, type = cv2.THRESH_BINARY)
+                else:
+                    _, mask = cv2.threshold(gray_img, thresh = self.thresh, maxval=self.colour, type = cv2.THRESH_BINARY_INV)
+                
+                try:
+                    contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                    largest_contour = max(contours, key=cv2.contourArea)
+                    M = cv2.moments(largest_contour)
+                except:
+                    logging.debug("NO CONTOUR FOUND")
+                    time.sleep(self.sense_delay)
+                    continue 
 
-            if M['m00'] != 0:
-                # cx = int(M['m10']/M['m00'])
-                # cy = int(M['m01']/M['m00'])
-                self.robot_location = (int(M['m10']/M['m00']) - img_width)/img_width
-                # cv2.circle(gray_img, (cx, cy), 5, (0, 0, 255), -1)
-            # cv2.imshow("Gray", gray_img)
-            # cv2.waitKey(0)
-            #cv2.destroyAllWindows()
-            time.sleep(self.sense_delay)
+                if M['m00'] != 0:
+                    # cx = int(M['m10']/M['m00'])
+                    # cy = int(M['m01']/M['m00'])
+                    self.robot_location = (int(M['m10']/M['m00']) - img_width)/img_width
+                    # cv2.circle(gray_img, (cx, cy), 5, (0, 0, 255), -1)
+                # cv2.imshow("Gray", gray_img)
+                # cv2.waitKey(0)
+                #cv2.destroyAllWindows()
+                time.sleep(self.sense_delay)
+            except:
+                logging.debug("No image found")
 
     def robot_position(self):
         while True:
-            self.interpret_control_bus.write(self.robot_location)
-            logging.debug(f'Robot Location: {self.robot_location}')
+            try:
+                self.interpret_control_bus.write(self.robot_location)
+                logging.debug(f'Robot Location: {self.robot_location}')
+            except:
+                logging.debug("Could not find robot location")
             time.sleep(self.control_delay)
 
 class Control():
@@ -176,20 +186,15 @@ class Control():
 
 class Bus():
     def __init__(self):
-        self.message = -0.5
+        self.message = None
         self.lock = rwlock.RWLockWrite()
 
     def write(self, message):
-        logging.debug("LOCKING - Write")
         with self.lock.gen_wlock():
-            logging.debug("LOCKED - Write")
             self.message = message
-        logging.debug(f'UNLOCKED - Write, Write message: {self.message}')
 
     def read(self):
         with self.lock.gen_rlock():
-            logging.debug("LOCKED - READ")
-            logging.debug(f'Read message: {self.message}')
             message = self.message
         return message
 
@@ -202,8 +207,8 @@ if __name__ == "__main__":
     sense_interpret_bus = Bus()
     interpret_control_bus = Bus()
 
-    sense_delay = 5
-    control_delay = 5
+    sense_delay = 0.1
+    control_delay = 0.1
 
     sense = Sense(px = px, sense_interpret_bus=sense_interpret_bus, sense_delay=sense_delay, camera = False)
     think = Interpret(sense_interpret_bus=sense_interpret_bus, interpret_control_bus=interpret_control_bus, 
