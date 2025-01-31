@@ -221,7 +221,7 @@ if __name__ == "__main__":
         eInterpreter = executor.submit(think.line_location_grayscale)
         eRobot = executor.submit(think.robot_position)
         eControl = executor.submit(control.steer)
-    
+    px.forward(20)
     eInterpreter.result()
     eSensor.result()
     eControl.result()
