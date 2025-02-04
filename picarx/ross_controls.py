@@ -160,10 +160,10 @@ if __name__ == "__main__":
 
     sense = Sense(px = px, camera = camera)
     think = Interpret(polarity = False)
-    control = Control(threshold = 0.1)
+    control = Control(px = px, threshold = 0.1)
     time.sleep(2)
     sense_interpret_bus = ros.Bus(sense.get_grayscale_from_hardware(), "Grayscale hardware")
-    interpret_control_bus = ros.Bus(think.line_location_grayscale(), "Position calculation")
+    interpret_control_bus = ros.Bus(think.line_location_grayscale(sense.get_grayscale_from_hardware()), "Position calculation")
     terminate_bus = ros.Bus(0, "Termination bus")
        
     read_grayscale = ros.Producer(
