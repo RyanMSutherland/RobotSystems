@@ -20,6 +20,8 @@ class Sense():
     def __init__(self, px, camera = False):
         self.px = px
         self.reference = np.array(self.px.grayscale._reference)
+        self.ultrasonic_distance = 0
+        self.px.get_distance()
         if camera:
             Vilib.camera_start()
             time.sleep(0.5)
@@ -30,6 +32,9 @@ class Sense():
     
     def get_grayscale_from_hardware(self):
         return np.array(self.px.grayscale.read()) - self.reference
+    
+    def get_ultrasonic_from_hardware(self):
+        return self.px.get_distance()
     
     def take_photo(self):
         try:
@@ -119,11 +124,12 @@ class Interpret():
             logging.debug("No image found")
 
 class Control():
-        def __init__(self, px, k_p = 30, k_i = 0.0, threshold = 0.1):
+        def __init__(self, px, k_p = 30, k_i = 0.0, stop_distance = 15, threshold = 0.1):
             self.px = px
             self.k_p = k_p
             self.k_i = k_i
             self.threshold = threshold
+            self.stop_distance = stop_distance
             self.error = 0.0
             self.angle = 0.0
     
@@ -140,6 +146,11 @@ class Control():
                     self.px.set_dir_servo_angle(self.angle)
             except:
                 logging.debug("No steering provided")
+        
+        def ultrasonic_stop(self, car_distance):
+            if car_distance < self.stop_distance:
+                return 1
+            return 0
 
 if __name__ == "__main__":
     method = 0
@@ -155,7 +166,7 @@ if __name__ == "__main__":
     think_delay = 0.1
     control_delay = 0.1
     print_delay = 0.25
-    full_time = 4
+    full_time = 15
     check_time = 0.01
 
     sense = Sense(px = px, camera = camera)
@@ -165,6 +176,7 @@ if __name__ == "__main__":
     px.forward(20)
     sense_interpret_bus = ros.Bus(sense.get_grayscale_from_hardware(), "Grayscale hardware")
     interpret_control_bus = ros.Bus(think.line_location_grayscale(sense.get_grayscale_from_hardware()), "Position calculation")
+    ultrasonic_bus = ros.Bus(sense.get_ultrasonic_from_hardware(), "Ultrasonic bus")
     terminate_bus = ros.Bus(0, "Termination bus")
        
     read_grayscale = ros.Producer(
@@ -175,10 +187,27 @@ if __name__ == "__main__":
         "Read grayscale values"
     )
 
+    read_ultrasonic = ros.Producer(
+        sense.get_ultrasonic_from_hardware,
+        ultrasonic_bus,
+        sense_delay,
+        terminate_bus,
+        "Read Ultrasonic values"
+    )
+
     determine_position = ros.ConsumerProducer(
         think.line_location_grayscale,
         sense_interpret_bus,
         interpret_control_bus,
+        think_delay,
+        terminate_bus,
+        "Calculate position"
+    )
+
+    determine_stop = ros.ConsumerProducer(
+        control.ultrasonic_stop,
+        ultrasonic_bus,
+        terminate_bus,
         think_delay,
         terminate_bus,
         "Calculate position"
@@ -212,7 +241,9 @@ if __name__ == "__main__":
                               determine_position,
                               move_wheels,
                               print_buses,
-                              terminate_timer
+                              terminate_timer,
+                              determine_stop,
+                              read_ultrasonic
                               ]
     
     ros.runConcurrently(producer_consumer_list)
