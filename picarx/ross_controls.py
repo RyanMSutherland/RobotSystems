@@ -7,8 +7,6 @@ import time
 import logging
 import numpy as np
 import cv2
-import concurrent.futures
-from readerwriterlock import rwlock
 import rossros as ros
 
 
@@ -173,7 +171,8 @@ if __name__ == "__main__":
     think = Interpret(polarity = False)
     control = Control(px = px, threshold = 0.1)
     time.sleep(2)
-    px.forward(20)
+    
+    px.forward(30)
     sense_interpret_bus = ros.Bus(sense.get_grayscale_from_hardware(), "Grayscale hardware")
     interpret_control_bus = ros.Bus(think.line_location_grayscale(sense.get_grayscale_from_hardware()), "Position calculation")
     ultrasonic_bus = ros.Bus(sense.get_ultrasonic_from_hardware(), "Ultrasonic bus")
