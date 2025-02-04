@@ -155,13 +155,14 @@ if __name__ == "__main__":
     think_delay = 0.1
     control_delay = 0.1
     print_delay = 0.25
-    full_time = 10
+    full_time = 4
     check_time = 0.01
 
     sense = Sense(px = px, camera = camera)
     think = Interpret(polarity = False)
     control = Control(px = px, threshold = 0.1)
     time.sleep(2)
+    px.forward(20)
     sense_interpret_bus = ros.Bus(sense.get_grayscale_from_hardware(), "Grayscale hardware")
     interpret_control_bus = ros.Bus(think.line_location_grayscale(sense.get_grayscale_from_hardware()), "Position calculation")
     terminate_bus = ros.Bus(0, "Termination bus")
@@ -213,3 +214,5 @@ if __name__ == "__main__":
                               print_buses,
                               terminate_timer
                               ]
+    
+    ros.runConcurrently(producer_consumer_list)
