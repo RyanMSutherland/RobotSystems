@@ -70,6 +70,7 @@ class Interpret():
         self.colour = 255
         self.img_start = 350
         self.img_cutoff = 425
+        self.lock = rwlock.RWLockWrite()
     
     def line_location_grayscale(self):
         while True:
@@ -85,20 +86,24 @@ class Interpret():
 
                 try:
                     if left > right:
-                        self.robot_location = (middle - left)/max(left, middle)
-                        if self.robot_location < 0:
-                            self.robot_location = self.robot_location
+                        approx_location = (middle - left)/max(left, middle)
+                        if approx_location < 0:
+                            with self.lock.gen_wlock():
+                                self.robot_location = approx_location
                             time.sleep(sense_delay)
                             continue
-                        self.robot_location -= 1
+                        with self.lock.gen_wlock():
+                            self.robot_location = approx_location - 1
                         time.sleep(sense_delay)
                         continue
-                    self.robot_location = (middle-right)/max(middle, right)
-                    if self.robot_location < 0:
-                        self.robot_location = -1*self.robot_location
+                    approx_location = (middle-right)/max(middle, right)
+                    if approx_location < 0:
+                        with self.lock.gen_wlock():
+                            self.robot_location = -1*approx_location
                         time.sleep(sense_delay)
                         continue
-                    self.robot_location = 1-self.robot_location
+                    with self.lock.gen_wlock():
+                        self.robot_location = 1-approx_location
                     time.sleep(sense_delay)
                     continue
                 except:
@@ -134,7 +139,8 @@ class Interpret():
                 if M['m00'] != 0:
                     # cx = int(M['m10']/M['m00'])
                     # cy = int(M['m01']/M['m00'])
-                    self.robot_location = (int(M['m10']/M['m00']) - img_width)/img_width
+                    with self.lock.gen_wlock():
+                        self.robot_location = (int(M['m10']/M['m00']) - img_width)/img_width
                     # cv2.circle(gray_img, (cx, cy), 5, (0, 0, 255), -1)
                 # cv2.imshow("Gray", gray_img)
                 # cv2.waitKey(0)
@@ -146,7 +152,8 @@ class Interpret():
     def robot_position(self):
         while True:
             try:
-                self.interpret_control_bus.write(self.robot_location)
+                with self.lock.gen_rlock():
+                    self.interpret_control_bus.write(self.robot_location)
                 logging.debug(f'Robot Location: {self.robot_location}')
             except:
                 logging.debug("Could not find robot location")
