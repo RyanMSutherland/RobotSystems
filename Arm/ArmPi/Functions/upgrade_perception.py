@@ -37,6 +37,8 @@ class Perception():
         self.movement_change_thresh = 0.5
         self.previous_time = time.time()
         self.time_threshold = 1.0
+        self.current_colour = "None"
+        self.draw_colour = self.possible_colour_values['black']
 
     def find_objects(self):
         while True:
@@ -100,23 +102,23 @@ class Perception():
                 self.previous_time = time.time()
                 self.center_locations = []
             
-            current_colour = 'None'
-            draw_colour = self.possible_colour_values['black']
-            
             if len(self.seen_colours) == 3:
                 current_number = int(round(np.mean(np.array(self.seen_colours))))
                 if current_number in self.number_to_color:
-                    current_colour = self.number_to_color[current_number]
-                    draw_colour = self.possible_colour_values[current_colour]
+                    self.current_colour = self.number_to_color[current_number]
+                    self.draw_colour = self.possible_colour_values[self.current_colour]
+
+                    self.current_colour = 'None'
+                    self.draw_colour = self.possible_colour_values['black']
                     
                 
                 self.seen_colours = []
             
         else:
-            draw_colour = (0, 0, 0)
-            current_colour = "None"
+            self.draw_colour = (0, 0, 0)
+            self.current_colour = "None"
 
-        cv2.putText(img, f'Colour: {current_colour}', (10, height - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.65, draw_colour, 2)
+        cv2.putText(img, f'Colour: {self.current_colour}', (10, height - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.65, self.draw_colour, 2)
         return img
             
     def check_timing(self, rect):
