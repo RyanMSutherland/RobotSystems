@@ -147,4 +147,5 @@ class Perception():
                 
 
 if __name__ == "__main__":
-    pass
+    perception = Perception()
+    perception.find_objects()
