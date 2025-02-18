@@ -104,8 +104,8 @@ if __name__ == "__main__":
     perception = Perception()
     motion = Motion(perception)
 
-    t1 = threading.Thread(perception.find_objects)
-    t2 = threading.Thread(motion.move_arm)
+    t1 = threading.Thread(target=perception.find_objects)
+    t2 = threading.Thread(target=motion.move_arm)
 
     t1.start()
     t2.start()
