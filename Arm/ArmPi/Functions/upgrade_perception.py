@@ -49,8 +49,8 @@ class Perception():
                 if key == 27:
                     break
             
-            self.camera.camera_close()
-            cv2.destroyAllWindows()
+        self.camera.camera_close()
+        cv2.destroyAllWindows()
 
     def process_img(self, img):
         height, width = img.shape[:2]
