@@ -64,16 +64,15 @@ class Perception():
         #Re-size and find regions of interest
         reshape_img = cv2.resize(img, self.img_size, interpolation=cv2.INTER_NEAREST)
         reshape_img_blur = cv2.GaussianBlur(reshape_img, self.blur_kernal, self.std_kernal)
-        try:
-            reshape_img_blur = getMaskROI(reshape_img_blur, self.roi, self.img_size)
-        except:
-            print("No contour found")
+        # try:
+        #     reshape_img_blur = getMaskROI(reshape_img_blur, self.roi, self.img_size)
+        # except:
+        #     print("No contour found")
         img_lab_color = cv2.cvtColor(reshape_img_blur, cv2.COLOR_BGR2LAB)
 
         self.process_region_of_interest(img_lab_color)
 
         if self.best_contour_area > self.minimum_contour_thresh:
-            print("Good Contour")
             rect = cv2.minAreaRect(self.best_contour)
             box = np.int0(cv2.boxPoints(rect))
 
