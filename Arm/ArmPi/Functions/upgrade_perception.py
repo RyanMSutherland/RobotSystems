@@ -122,7 +122,7 @@ class Perception():
     def check_timing(self, rect):
         if time.time() - self.previous_time > self.time_threshold:
             self.rotation_angle = rect[2]
-            average_x, average_y = np.mean(np.array(self.center_locations).reshape(len(self.center_locations)/2, 2), axis = 0)
+            # average_x, average_y = np.mean(np.array(self.center_locations).reshape(len(self.center_locations)/2, 2), axis = 0)
             self.center_locations = []
             self.previous_time = time.time()
 
