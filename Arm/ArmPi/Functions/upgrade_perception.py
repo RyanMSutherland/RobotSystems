@@ -65,7 +65,7 @@ class Perception():
         try:
             reshape_img_blur = getMaskROI(reshape_img_blur, self.roi, self.img_size)
         except:
-            print("Skip")
+            print("No contour found")
         img_lab_color = cv2.cvtColor(reshape_img_blur, cv2.COLOR_BGR2LAB)
 
         self.process_region_of_interest(img_lab_color)
@@ -100,14 +100,15 @@ class Perception():
                 self.previous_time = time.time()
                 self.center_locations = []
             
+            current_colour = 'None'
+            draw_colour = self.possible_colour_values['black']
+            
             if len(self.seen_colours) == 3:
                 current_number = int(round(np.mean(np.array(self.seen_colours))))
                 if current_number in self.number_to_color:
                     current_colour = self.number_to_color[current_number]
                     draw_colour = self.possible_colour_values[current_colour]
-                else:
-                    current_colour = 'None'
-                    draw_colour = self.possible_colour_values['black']
+                    
                 
                 self.seen_colours = []
             
