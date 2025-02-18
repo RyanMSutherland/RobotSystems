@@ -62,7 +62,10 @@ class Perception():
         #Re-size and find regions of interest
         reshape_img = cv2.resize(img, self.img_size, interpolation=cv2.INTER_NEAREST)
         reshape_img_blur = cv2.GaussianBlur(reshape_img, self.blur_kernal, self.std_kernal)
-        reshape_img_blur = getMaskROI(reshape_img_blur, self.roi, self.img_size)
+        try:
+            reshape_img_blur = getMaskROI(reshape_img_blur, self.roi, self.img_size)
+        except:
+            print("Skip")
         img_lab_color = cv2.cvtColor(reshape_img_blur, cv2.COLOR_BGR2LAB)
 
         self.process_region_of_interest(img_lab_color)
