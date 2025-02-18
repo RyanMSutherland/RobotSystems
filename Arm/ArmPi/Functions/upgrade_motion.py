@@ -50,56 +50,57 @@ class Motion():
         AK.setPitchRangeMoving((0, 10, 10), -30, -30, -90, 1500)
     
     def move_arm(self):
-        print(f"Move arm to colour: {self.perception.current_colour}")
-        if self.perception.current_colour != "None":
-            current_colour = self.perception.current_colour
-            self.set_led_colour(current_colour)
-
-            desired_x, desired_y, desired_angle = self.perception.last_x, self.perception.last_y, self.perception.rotation_angle
-            result = AK.setPitchRangeMoving((desired_x, desired_y, 7), -90, -90, 0)  
-
-            if result:
-                time.sleep(result[2]/self.sleep_divider)
-
-                block_rotation = getAngle(desired_x, desired_y, desired_angle)
-                Board.setBusServoPulse(self.servo_1_id, self.gripper_closed - self.gripper_open, self.gripper_closed)
-                Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
-                time.sleep(self.sleep_time)
-
-                AK.setPitchRangeMoving((desired_x, desired_y, 1.5), -90, -90, 0, 1000)
-                time.sleep(self.sleep_time)
-
-                Board.setBusServoPulse(self.servo_1_id, self.gripper_closed, self.gripper_closed)
-                time.sleep(self.sleep_time)
-
-                Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
-                AK.setPitchRangeMoving((desired_x, desired_y, 12), -90, -90, 0, 1000)
-                time.sleep(2*self.sleep_time)
-
-                result = AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0)   
-                time.sleep(result[2]/self.sleep_divider)
-                                 
-                block_rotation = getAngle(self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], -90)
-                Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
-                time.sleep(self.sleep_time)
-
-                AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], self.colour_coordinates[current_colour][2] + 3), -90, -90, 0, 500)
-                time.sleep(self.sleep_time)
-                                     
-                AK.setPitchRangeMoving((self.colour_coordinates[current_colour]), -90, -90, 0, 1000)
-                time.sleep(self.sleep_time)
-
-                Board.setBusServoPulse(1, self.gripper_closed - self.gripper_open, self.gripper_closed)
-                time.sleep(self.sleep_time)
-
-                AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0, 800)
-                time.sleep(self.sleep_time)
-
-                self.move_home()
-                time.sleep(3*self.sleep_time)
-
-                current_colour = 'None'
+        while True:
+            print(f"Move arm to colour: {self.perception.current_colour}")
+            if self.perception.current_colour != "None":
+                current_colour = self.perception.current_colour
                 self.set_led_colour(current_colour)
+
+                desired_x, desired_y, desired_angle = self.perception.last_x, self.perception.last_y, self.perception.rotation_angle
+                result = AK.setPitchRangeMoving((desired_x, desired_y, 7), -90, -90, 0)  
+
+                if result:
+                    time.sleep(result[2]/self.sleep_divider)
+
+                    block_rotation = getAngle(desired_x, desired_y, desired_angle)
+                    Board.setBusServoPulse(self.servo_1_id, self.gripper_closed - self.gripper_open, self.gripper_closed)
+                    Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
+                    time.sleep(self.sleep_time)
+
+                    AK.setPitchRangeMoving((desired_x, desired_y, 1.5), -90, -90, 0, 1000)
+                    time.sleep(self.sleep_time)
+
+                    Board.setBusServoPulse(self.servo_1_id, self.gripper_closed, self.gripper_closed)
+                    time.sleep(self.sleep_time)
+
+                    Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
+                    AK.setPitchRangeMoving((desired_x, desired_y, 12), -90, -90, 0, 1000)
+                    time.sleep(2*self.sleep_time)
+
+                    result = AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0)   
+                    time.sleep(result[2]/self.sleep_divider)
+                                    
+                    block_rotation = getAngle(self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], -90)
+                    Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
+                    time.sleep(self.sleep_time)
+
+                    AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], self.colour_coordinates[current_colour][2] + 3), -90, -90, 0, 500)
+                    time.sleep(self.sleep_time)
+                                        
+                    AK.setPitchRangeMoving((self.colour_coordinates[current_colour]), -90, -90, 0, 1000)
+                    time.sleep(self.sleep_time)
+
+                    Board.setBusServoPulse(1, self.gripper_closed - self.gripper_open, self.gripper_closed)
+                    time.sleep(self.sleep_time)
+
+                    AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0, 800)
+                    time.sleep(self.sleep_time)
+
+                    self.move_home()
+                    time.sleep(3*self.sleep_time)
+
+                    current_colour = 'None'
+                    self.set_led_colour(current_colour)
 
 if __name__ == "__main__":
     perception = Perception()
