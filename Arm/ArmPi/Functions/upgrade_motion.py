@@ -25,6 +25,7 @@ class Motion():
         self.gripper_open = 280
         self.servo_1_id = 1
         self.servo_2_id = 2
+        self.arm_kinematics = ArmIK()
     
     def set_led_colour(self, colour):
         if colour == "red":
@@ -47,7 +48,7 @@ class Motion():
     def move_home(self):
         Board.setBusServoPulse(1, self.gripper_closed - 50, 300)
         Board.setBusServoPulse(2, 500, 500)
-        AK.setPitchRangeMoving((0, 10, 10), -30, -30, -90, 1500)
+        self.arm_kinematics.setPitchRangeMoving((0, 10, 10), -30, -30, -90, 1500)
     
     def move_arm(self):
         while True:
@@ -57,7 +58,7 @@ class Motion():
                 self.set_led_colour(current_colour)
 
                 desired_x, desired_y, desired_angle = self.perception.last_x, self.perception.last_y, self.perception.rotation_angle
-                result = AK.setPitchRangeMoving((desired_x, desired_y, 7), -90, -90, 0)  
+                result = self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, 7), -90, -90, 0)  
 
                 if result:
                     time.sleep(result[2]/self.sleep_divider)
@@ -67,33 +68,33 @@ class Motion():
                     Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
                     time.sleep(self.sleep_time)
 
-                    AK.setPitchRangeMoving((desired_x, desired_y, 1.5), -90, -90, 0, 1000)
+                    self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, 1.5), -90, -90, 0, 1000)
                     time.sleep(self.sleep_time)
 
                     Board.setBusServoPulse(self.servo_1_id, self.gripper_closed, self.gripper_closed)
                     time.sleep(self.sleep_time)
 
                     Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
-                    AK.setPitchRangeMoving((desired_x, desired_y, 12), -90, -90, 0, 1000)
+                    self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, 12), -90, -90, 0, 1000)
                     time.sleep(2*self.sleep_time)
 
-                    result = AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0)   
+                    result = self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0)   
                     time.sleep(result[2]/self.sleep_divider)
                                     
                     block_rotation = getAngle(self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], -90)
                     Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
                     time.sleep(self.sleep_time)
 
-                    AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], self.colour_coordinates[current_colour][2] + 3), -90, -90, 0, 500)
+                    self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], self.colour_coordinates[current_colour][2] + 3), -90, -90, 0, 500)
                     time.sleep(self.sleep_time)
                                         
-                    AK.setPitchRangeMoving((self.colour_coordinates[current_colour]), -90, -90, 0, 1000)
+                    self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour]), -90, -90, 0, 1000)
                     time.sleep(self.sleep_time)
 
                     Board.setBusServoPulse(1, self.gripper_closed - self.gripper_open, self.gripper_closed)
                     time.sleep(self.sleep_time)
 
-                    AK.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0, 800)
+                    self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0, 800)
                     time.sleep(self.sleep_time)
 
                     self.move_home()
