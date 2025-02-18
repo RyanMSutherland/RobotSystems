@@ -102,7 +102,7 @@ class Motion():
 
 if __name__ == "__main__":
     perception = Perception()
-    motion = Motion()
+    motion = Motion(perception)
 
     t1 = threading.Thread(perception.find_objects)
     t2 = threading.Thread(motion.move_arm)
