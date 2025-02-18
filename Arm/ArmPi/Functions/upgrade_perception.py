@@ -73,6 +73,7 @@ class Perception():
         self.process_region_of_interest(img_lab_color)
 
         if self.best_contour_area > self.minimum_contour_thresh:
+            print("Good Contour")
             rect = cv2.minAreaRect(self.best_contour)
             box = np.int0(cv2.boxPoints(rect))
 
@@ -107,7 +108,7 @@ class Perception():
                 if current_number in self.number_to_color:
                     self.current_colour = self.number_to_color[current_number]
                     self.draw_colour = self.possible_colour_values[self.current_colour]
-
+                else:
                     self.current_colour = 'None'
                     self.draw_colour = self.possible_colour_values['black']
                     
