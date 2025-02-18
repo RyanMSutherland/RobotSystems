@@ -39,6 +39,7 @@ class Perception():
         self.time_threshold = 1.0
         self.current_colour = "None"
         self.draw_colour = self.possible_colour_values['black']
+        self.rotation_angle = 0
 
     def find_objects(self):
         while True:
