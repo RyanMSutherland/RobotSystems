@@ -27,7 +27,7 @@ range_rgb = {
 }
 
 __target_color = ('red')
-# 设置检测颜色
+# 设置检测颜色 - Set detection colour
 def setTargetColor(target_color):
     global __target_color
 
@@ -35,8 +35,8 @@ def setTargetColor(target_color):
     __target_color = target_color
     return (True, ())
 
-#找出面积最大的轮廓
-#参数为要比较的轮廓的列表
+#找出面积最大的轮廓 - Find the contour with the largest area
+#参数为要比较的轮廓的列表 - The parameter is a list of contours to be compared
 def getAreaMaxContour(contours) :
         contour_area_temp = 0
         contour_area_max = 0
@@ -46,7 +46,7 @@ def getAreaMaxContour(contours) :
             contour_area_temp = math.fabs(cv2.contourArea(c))  #计算轮廓面积
             if contour_area_temp > contour_area_max:
                 contour_area_max = contour_area_temp
-                if contour_area_temp > 300:  #只有在面积大于300时，最大面积的轮廓才是有效的，以过滤干扰
+                if contour_area_temp > 300:  #只有在面积大于300时，最大面积的轮廓才是有效的，以过滤干扰 - Area must be greater than 300
                     area_max_contour = c
 
         return area_max_contour, contour_area_max  #返回最大的轮廓
