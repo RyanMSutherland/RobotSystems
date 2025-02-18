@@ -50,6 +50,7 @@ class Motion():
         AK.setPitchRangeMoving((0, 10, 10), -30, -30, -90, 1500)
     
     def move_arm(self):
+        print(f"Move arm to colour: {self.perception.current_colour}")
         if self.perception.current_colour != "None":
             current_colour = self.perception.current_colour
             self.set_led_colour(current_colour)
