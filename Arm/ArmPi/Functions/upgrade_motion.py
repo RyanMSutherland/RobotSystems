@@ -20,7 +20,7 @@ class Motion():
         self.perception = perception
         self.currently_moving = False
         self.sleep_divider = 1000
-        self.sleep_time = 1.0
+        self.sleep_time = 0.5
         self.gripper_closed = 500
         self.gripper_open = 280
         self.servo_1_id = 1
@@ -100,10 +100,10 @@ class Motion():
                     time.sleep(self.sleep_time)
 
                     self.move_home()
-                    time.sleep(3*self.sleep_time)
 
                     current_colour = 'None'
                     self.set_led_colour(current_colour)
+                    time.sleep(3*self.sleep_time)
 
 if __name__ == "__main__":
     perception = Perception()
