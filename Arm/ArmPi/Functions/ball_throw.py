@@ -15,7 +15,7 @@ class Ball_Throw(Perception):
     def __init__(self):
         super().__init__()
         self.possible_colour_values = {'orange': (255, 165, 0)}
-        self.color_range = {'orange': [(100, 200, 0), (255, 128, 0)],
+        self.color_range = {'orange': [(100, 50, 0), (255, 128, 0)],
                             'black': [(0, 0, 0), (56, 255, 255)], 
                             'white': [(193, 0, 0), (255, 250, 255)]}
         self.gripper_open = 280
