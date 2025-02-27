@@ -48,8 +48,8 @@ class Motion():
             Board.RGB.show()
     
     def move_home(self):
-        Board.setBusServoPulse(1, self.gripper_closed - 50, 300)
-        Board.setBusServoPulse(2, 500, 500)
+        Board.setBusServoPulse(1, self.gripper_closed - 50, self.gripper_open)
+        Board.setBusServoPulse(2, self.gripper_closed, self.gripper_closed)
         self.arm_kinematics.setPitchRangeMoving((0, 10, 10), -30, -30, -90, 1500)
         time.sleep(self.sleep_time)
     
