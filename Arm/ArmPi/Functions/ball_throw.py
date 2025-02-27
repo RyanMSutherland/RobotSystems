@@ -14,7 +14,7 @@ from upgrade_motion import Motion
 class Ball_Throw(Perception):
     def __init__(self):
         super().__init__()
-        self.possible_colour_values = {'orange': (255, 165, 0)}
+        self.possible_colour_values = {'orange': (0, 165, 255)}
         self.color_range = {'orange': [(0, 151, 100), (255, 255, 255)],
                             'black': [(0, 0, 0), (56, 255, 255)], 
                             'white': [(193, 0, 0), (255, 250, 255)]}
