@@ -57,6 +57,7 @@ class Perception():
         cv2.destroyAllWindows()
 
     def process_img(self, img):
+        print("Processing...")
         height, width = img.shape[:2]
 
         # Draw calibration + on image to ensure we know where we are
@@ -71,8 +72,9 @@ class Perception():
         # except:
         #     print("No contour found")
         img_lab_color = cv2.cvtColor(reshape_img_blur, cv2.COLOR_BGR2LAB)
-
+        print("About to region")
         self.process_region_of_interest(img_lab_color)
+        print("Regions")
 
         if self.best_contour_area > self.minimum_contour_thresh:
             rect = cv2.minAreaRect(self.best_contour)
