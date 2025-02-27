@@ -73,7 +73,6 @@ class Perception():
         img_lab_color = cv2.cvtColor(reshape_img_blur, cv2.COLOR_BGR2LAB)
 
         self.process_region_of_interest(img_lab_color)
-        print("PROCESSED")
 
         if self.best_contour_area > self.minimum_contour_thresh:
             rect = cv2.minAreaRect(self.best_contour)
@@ -132,11 +131,10 @@ class Perception():
             self.previous_time = time.time()
 
     def process_region_of_interest(self, img_lab_color):
-        print("HERE")
         self.best_contour = None
         self.best_contour_area = 0
         self.color_of_interest = None
-        print(self.color_range)
+
         for color in self.color_range:
             if color in self.target_color:
                 color_mask = cv2.inRange(img_lab_color, self.color_range[color][0], self.color_range[color][1]) # Find all values within given color range we want to analyze
