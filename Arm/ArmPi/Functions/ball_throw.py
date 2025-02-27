@@ -20,6 +20,7 @@ class Ball_Throw(Perception):
                             'white': [(193, 0, 0), (255, 250, 255)]}
         self.gripper_open = 280
         self.gripper_closed = 500
+        self.minimum_contour_thresh = 500
         self.sleep_time = 0.5
         self.arm_kinematics = ArmIK()
         self.servo_1_id = 1
