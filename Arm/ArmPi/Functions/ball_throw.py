@@ -76,4 +76,4 @@ class Ball_Throw(Perception):
 
 if __name__ == "__main__":
     ball_throw = Ball_Throw()
-    ball_throw.pickup_ball
+    ball_throw.find_ball()
