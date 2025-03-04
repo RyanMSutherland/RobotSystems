@@ -66,7 +66,7 @@ class Ball_Throw(Perception):
 
                     Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
                     self.arm_kinematics.setPitchRangeMoving((0, desired_y+10, self.desired_approach_height_grasp*3), -90, -90, 0, 300)
-                    
+                    print(desired_y)
 
                     # Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
                     # self.arm_kinematics.setPitchRangeMoving((0, -5, 10), -90, -90, 0, 1000)
