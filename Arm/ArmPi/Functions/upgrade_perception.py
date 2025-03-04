@@ -134,7 +134,7 @@ class Perception():
         self.best_contour = None
         self.best_contour_area = 0
         self.color_of_interest = None
-        print(self.color_range)
+        
         for color in self.color_range:
             if color in self.target_color:
                 color_mask = cv2.inRange(img_lab_color, self.color_range[color][0], self.color_range[color][1]) # Find all values within given color range we want to analyze

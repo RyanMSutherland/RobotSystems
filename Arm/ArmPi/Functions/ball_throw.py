@@ -32,11 +32,42 @@ class Ball_Throw(Perception):
         # We will need to thread this
         self.find_objects()
 
-    def pickup_ball(self):
-        pass
-
     def throw_ball(self):
-        pass
+        while True:
+            if self.perception.current_colour != "None":
+                current_colour = self.perception.current_colour
+                self.set_led_colour(current_colour)
+
+                desired_x, desired_y, desired_angle = self.perception.last_x, self.perception.last_y, self.perception.rotation_angle
+                result = self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, self.desired_approach_height_grasp), -90, -90, 0)  
+
+                if result:
+                    time.sleep(result[2]/self.sleep_divider)
+
+                    block_rotation = getAngle(desired_x, desired_y, desired_angle)
+                    Board.setBusServoPulse(self.servo_1_id, self.gripper_closed - self.gripper_open, self.gripper_closed)
+                    Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
+                    time.sleep(self.sleep_time)
+
+                    self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, self.desired_final_height_grasp), -90, -90, 0, 1000)
+                    time.sleep(self.sleep_time)
+
+                    Board.setBusServoPulse(self.servo_1_id, self.gripper_closed, self.gripper_closed)
+                    time.sleep(self.sleep_time)
+
+                    Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
+                    self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, self.desired_approach_height_grasp), -90, -90, 0, 1000)
+                    time.sleep(2*self.sleep_time)
+
+                    result = self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0)   
+                    time.sleep(result[2]/self.sleep_divider)
+                                    
+                    block_rotation = getAngle(self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], -90)
+                    Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
+                    time.sleep(self.sleep_time)
+
+                    self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], self.colour_coordinates[current_colour][2] + 3), -90, -90, 0, 500)
+                    time.sleep(self.sleep_time)
 
     def set_led_colour(self, colour):
         if colour == "orange":
@@ -56,4 +87,12 @@ class Ball_Throw(Perception):
 
 if __name__ == "__main__":
     ball_throw = Ball_Throw()
+
+    t1 = threading.Thread(target=ball_throw.find_ball)
+    t2 = threading.Thread(target=ball_throw.throw_ball)
+
+    t1.start()
+    t2.start()
+
+    
     ball_throw.find_ball()
