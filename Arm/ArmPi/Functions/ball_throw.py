@@ -28,6 +28,10 @@ class Ball_Throw(Perception):
         self.arm_kinematics = ArmIK()
         self.servo_1_id = 1
         self.servo_2_id = 2
+        self.currently_moving = False
+        self.sleep_divider = 1000
+        self.desired_approach_height_grasp = 7
+        self.desired_final_height_grasp = 1.0
     
     def find_ball(self):
         # We will need to thread this
