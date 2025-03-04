@@ -65,13 +65,13 @@ class Ball_Throw(Perception):
                     time.sleep(self.sleep_time)
 
                     Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
-                    self.arm_kinematics.setPitchRangeMoving((0, desired_y, self.desired_approach_height_grasp*3), -90, -90, 0, 500)
-                    time.sleep(2*self.sleep_time)
+                    self.arm_kinematics.setPitchRangeMoving((0, desired_y, self.desired_approach_height_grasp*3), -90, -90, 0, 300)
+                    
 
                     # Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
                     # self.arm_kinematics.setPitchRangeMoving((0, -5, 10), -90, -90, 0, 1000)
                     
-                    # Board.setBusServoPulse(self.servo_1_id, self.gripper_closed - self.gripper_open, self.gripper_closed)
+                    Board.setBusServoPulse(self.servo_1_id, self.gripper_closed - self.gripper_open, self.gripper_closed)
                     time.sleep(self.sleep_time)
 
                     self.move_home()
