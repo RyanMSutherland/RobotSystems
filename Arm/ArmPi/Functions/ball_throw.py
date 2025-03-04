@@ -88,7 +88,7 @@ if __name__ == "__main__":
     ball_throw = Ball_Throw()
 
     t1 = threading.Thread(target=ball_throw.find_ball)
-    # t2 = threading.Thread(target=ball_throw.throw_ball)
+    t2 = threading.Thread(target=ball_throw.throw_ball)
 
     t1.start()
-    # t2.start()
+    t2.start()
