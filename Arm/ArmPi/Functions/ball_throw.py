@@ -32,6 +32,7 @@ class Ball_Throw(Perception):
         self.sleep_divider = 1000
         self.desired_approach_height_grasp = 7
         self.desired_final_height_grasp = 1.0
+        self.throw_height = 12.0
     
     def find_ball(self):
         # We will need to thread this
@@ -64,15 +65,13 @@ class Ball_Throw(Perception):
                     self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, self.desired_approach_height_grasp), -90, -90, 0, 1000)
                     time.sleep(2*self.sleep_time)
 
-                    result = self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0)   
-                    time.sleep(result[2]/self.sleep_divider)
-                                    
-                    block_rotation = getAngle(self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], -90)
-                    Board.setBusServoPulse(self.servo_2_id, block_rotation, self.gripper_closed)
+                    Board.setBusServoPulse(self.servo_2_id, self.gripper_closed, self.gripper_closed)
+                    self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, self.throw_height), -90, -90, 0, 1000)
+                    
+                    Board.setBusServoPulse(self.servo_1_id, self.gripper_closed - self.gripper_open, self.gripper_closed)
                     time.sleep(self.sleep_time)
 
-                    self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], self.colour_coordinates[current_colour][2] + 3), -90, -90, 0, 500)
-                    time.sleep(self.sleep_time)
+                    
 
     def set_led_colour(self, colour):
         if colour == "orange":

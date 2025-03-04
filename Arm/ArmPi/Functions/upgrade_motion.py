@@ -93,7 +93,7 @@ class Motion():
                     self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour]), -90, -90, 0, 1000)
                     time.sleep(self.sleep_time)
 
-                    Board.setBusServoPulse(1, self.gripper_closed - self.gripper_open, self.gripper_closed)
+                    Board.setBusServoPulse(self.servo_1_id, self.gripper_closed - self.gripper_open, self.gripper_closed)
                     time.sleep(self.sleep_time)
 
                     self.arm_kinematics.setPitchRangeMoving((self.colour_coordinates[current_colour][0], self.colour_coordinates[current_colour][1], 12), -90, -90, 0, 800)
