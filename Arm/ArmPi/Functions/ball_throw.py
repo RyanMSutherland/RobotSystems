@@ -9,7 +9,6 @@ from ArmIK.ArmMoveIK import *
 import HiwonderSDK.Board as Board
 from CameraCalibration.CalibrationConfig import *
 from upgrade_perception import Perception
-from upgrade_motion import Motion
 
 class Ball_Throw(Perception):
     def __init__(self):
@@ -34,11 +33,11 @@ class Ball_Throw(Perception):
 
     def throw_ball(self):
         while True:
-            if self.perception.current_colour != "None":
-                current_colour = self.perception.current_colour
+            if self.current_colour != "None":
+                current_colour = self.current_colour
                 self.set_led_colour(current_colour)
 
-                desired_x, desired_y, desired_angle = self.perception.last_x, self.perception.last_y, self.perception.rotation_angle
+                desired_x, desired_y, desired_angle = self.last_x, self.last_y, self.rotation_angle
                 result = self.arm_kinematics.setPitchRangeMoving((desired_x, desired_y, self.desired_approach_height_grasp), -90, -90, 0)  
 
                 if result:
