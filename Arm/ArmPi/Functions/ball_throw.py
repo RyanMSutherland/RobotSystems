@@ -32,7 +32,7 @@ class Ball_Throw(Perception):
         self.sleep_divider = 1000
         self.desired_approach_height_grasp = 7
         self.desired_final_height_grasp = 1.0
-        self.throw_height = 12.0
+        self.throw_height = 70.0
     
     def find_ball(self):
         # We will need to thread this
