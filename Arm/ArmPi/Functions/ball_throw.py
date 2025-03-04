@@ -19,6 +19,8 @@ class Ball_Throw(Perception):
                             'black': [(0, 0, 0), (56, 255, 255)], 
                             'white': [(193, 0, 0), (255, 250, 255)]}
         self.target_color = ('orange')
+        self.color_to_number = {"orange" : 1}
+        self.number_to_color = {1 : "orange"}
         self.gripper_open = 280
         self.gripper_closed = 500
         self.minimum_contour_thresh = 2500
