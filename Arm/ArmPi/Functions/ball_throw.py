@@ -39,6 +39,9 @@ class Ball_Throw(Perception):
         self.find_objects()
 
     def throw_ball(self):
+        current_colour = 'None'
+        self.set_led_colour(current_colour)
+        time.sleep(3*self.sleep_time)     
         while True:
             if self.current_colour != "None":
                 current_colour = self.current_colour
@@ -71,7 +74,11 @@ class Ball_Throw(Perception):
                     Board.setBusServoPulse(self.servo_1_id, self.gripper_closed - self.gripper_open, self.gripper_closed)
                     time.sleep(self.sleep_time)
 
-                    
+                    self.move_home()
+
+                    current_colour = 'None'
+                    self.set_led_colour(current_colour)
+                    time.sleep(3*self.sleep_time)                    
 
     def set_led_colour(self, colour):
         if colour == "orange":
